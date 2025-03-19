@@ -1,0 +1,77 @@
+services:
+  # React client application
+  client:
+    # Build from Dockerfile in the client directory
+    build:
+      context: ./client
+    ports:
+      - "5173:5173"
+    volumes:
+      - /app/client/node_modules # Allow container to manage its own dependencies
+      - .:/app
+    working_dir: /app/client
+    environment:
+      - NODE_ENV=development
+    # Enable HMR websocket connections
+    command: npm run dev -- --host
+
+  # GeoDjango web application
+  server:
+    # Build from the Dockerfile in the server directory
+    build:
+      context: ./server
+    # Host to container port mapping
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PW=${POSTGRES_PW}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
+      - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
+      - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
+    # Volume mount
+    volumes:
+      - .:/app
+    working_dir: /app/server
+    entrypoint: ["/entrypoint.sh"]
+    command: python manage.py runserver 0.0.0.0:8000
+    # Keep container active and interactive
+    tty: true
+    stdin_open: true
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # PostgreSQL database
+  db:
+      image: postgres
+      # Uncomment to persist data across container stops
+      # volumes:
+      #  - ./data/db:/var/lib/postgresql/data
+      environment:
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASSWORD=${POSTGRES_PW}
+        - POSTGRES_DB=${POSTGRES_DB}
+      healthcheck:
+        test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+        interval: 5s
+        timeout: 5s
+        retries: 5
+
+  # Database management tool
+  pgadmin:
+    container_name: pg_admin
+    image: dpage/pgadmin4:latest
+    # More info on pgAdmin container environment variables
+    # (https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html)
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_MAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PW}
+      # Add server configuration as JSON
+      - PGADMIN_SERVER_JSON_FILE=/pgadmin4/servers.json
+    ports:
+      - "5050:80"
+    volumes:
+    # Mount the server configuration file
+    - ./pgadmin-servers.json:/pgadmin4/servers.json

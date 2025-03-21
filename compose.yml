@@ -15,11 +15,14 @@ services:
     # Enable HMR websocket connections
     command: npm run dev -- --host
 
-  # GeoDjango web application
+  # Django web application
   server:
     # Build from the Dockerfile in the server directory
     build:
       context: ./server
+    # Inject secrets from env file
+    env_file:
+      - .env
     # Host to container port mapping
     ports:
       - "8000:8000"
@@ -30,9 +33,11 @@ services:
       - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
       - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
+      - FIREBASE_SERVICE_ACCOUNT_KEY_PATH=/app/firebase-admin/dining-hall-management-system-firebase-adminsdk-fbsvc-f2eea09d87.json
     # Volume mount
     volumes:
       - .:/app
+      - ./firebase-admin:/app/firebase-admin
     working_dir: /app/server
     entrypoint: ["/entrypoint.sh"]
     command: python manage.py runserver 0.0.0.0:8000

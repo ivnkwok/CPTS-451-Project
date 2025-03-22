@@ -11,12 +11,20 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as MenuImport } from './routes/menu'
 import { Route as LoginImport } from './routes/login'
 import { Route as AboutImport } from './routes/about'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
+import { Route as MenuIndexImport } from './routes/menu/index'
 
 // Create/Update Routes
+
+const MenuRoute = MenuImport.update({
+  id: '/menu',
+  path: '/menu',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const LoginRoute = LoginImport.update({
   id: '/login',
@@ -39,6 +47,12 @@ const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const MenuIndexRoute = MenuIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MenuRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -73,16 +87,42 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
+    '/menu': {
+      id: '/menu'
+      path: '/menu'
+      fullPath: '/menu'
+      preLoaderRoute: typeof MenuImport
+      parentRoute: typeof rootRoute
+    }
+    '/menu/': {
+      id: '/menu/'
+      path: '/'
+      fullPath: '/menu/'
+      preLoaderRoute: typeof MenuIndexImport
+      parentRoute: typeof MenuImport
+    }
   }
 }
 
 // Create and export the route tree
+
+interface MenuRouteChildren {
+  MenuIndexRoute: typeof MenuIndexRoute
+}
+
+const MenuRouteChildren: MenuRouteChildren = {
+  MenuIndexRoute: MenuIndexRoute,
+}
+
+const MenuRouteWithChildren = MenuRoute._addFileChildren(MenuRouteChildren)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AuthenticatedRoute
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
+  '/menu': typeof MenuRouteWithChildren
+  '/menu/': typeof MenuIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -90,6 +130,7 @@ export interface FileRoutesByTo {
   '': typeof AuthenticatedRoute
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
+  '/menu': typeof MenuIndexRoute
 }
 
 export interface FileRoutesById {
@@ -98,14 +139,23 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRoute
   '/about': typeof AboutRoute
   '/login': typeof LoginRoute
+  '/menu': typeof MenuRouteWithChildren
+  '/menu/': typeof MenuIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/about' | '/login'
+  fullPaths: '/' | '' | '/about' | '/login' | '/menu' | '/menu/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/about' | '/login'
-  id: '__root__' | '/' | '/_authenticated' | '/about' | '/login'
+  to: '/' | '' | '/about' | '/login' | '/menu'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/about'
+    | '/login'
+    | '/menu'
+    | '/menu/'
   fileRoutesById: FileRoutesById
 }
 
@@ -114,6 +164,7 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRoute
   AboutRoute: typeof AboutRoute
   LoginRoute: typeof LoginRoute
+  MenuRoute: typeof MenuRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -121,6 +172,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRoute,
   AboutRoute: AboutRoute,
   LoginRoute: LoginRoute,
+  MenuRoute: MenuRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -136,7 +188,8 @@ export const routeTree = rootRoute
         "/",
         "/_authenticated",
         "/about",
-        "/login"
+        "/login",
+        "/menu"
       ]
     },
     "/": {
@@ -150,6 +203,16 @@ export const routeTree = rootRoute
     },
     "/login": {
       "filePath": "login.tsx"
+    },
+    "/menu": {
+      "filePath": "menu.tsx",
+      "children": [
+        "/menu/"
+      ]
+    },
+    "/menu/": {
+      "filePath": "menu/index.tsx",
+      "parent": "/menu"
     }
   }
 }

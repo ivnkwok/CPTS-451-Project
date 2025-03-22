@@ -17,6 +17,11 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
+            <a href="/menu" style={{ color: 'inherit', textDecoration: 'none' }}>
+              Menu
+            </a>
+          </li>
+          <li>
             <Link to="/about" activeProps={{ style: { color: 'cyan' } }}>
               About
             </Link>

@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@tanstack/react-router": "^1.114.25",
+    "@types/axios": "^0.9.36",
+    "axios": "^1.8.4",
     "firebase": "^11.4.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

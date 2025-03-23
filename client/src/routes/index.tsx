@@ -1,13 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
+import Menu from '../pages/menu/Menu'
 
 export const Route = createFileRoute('/')({
-  component: Index,
+  component: Menu,
 })
-
-function Index() {
-  return (
-    <div>
-      <h3>Welcome Home!</h3>
-    </div>
-  )
-}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 const AddMenuItemForm = () => {
   type MenuItemForm = {
@@ -40,7 +40,9 @@ const AddMenuItemForm = () => {
 
     const data = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
-      if (value !== null) data.append(key, value);
+      if (value !== null) {
+        data.append(key, value);
+      }
     });
 
     try {
@@ -52,10 +54,20 @@ const AddMenuItemForm = () => {
         }
       );
       alert("Menu item added!");
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error adding menu item:", error);
-      alert("Failed to add item.");
+      console.log("Success:", response.data);
+    } catch (error: unknown) {
+      const err = error as AxiosError;
+
+      if (err.response) {
+        console.error("Server responded with:", err.response.data);
+        alert(`Failed to add item: ${JSON.stringify(err.response.data)}`);
+      } else {
+        console.error(
+          "Request error:",
+          err instanceof Error ? err.message : err
+        );
+        alert("Failed to add item. See console for details.");
+      }
     }
   };
 
@@ -89,7 +101,12 @@ const AddMenuItemForm = () => {
         value={formData.nutritional_info}
         onChange={handleChange}
       />
-      <input type="file" name="image" onChange={handleFileChange} />
+      <input
+        type="file"
+        name="image"
+        accept="image/*"
+        onChange={handleFileChange}
+      />
       <button type="submit">Add Item</button>
     </form>
   );

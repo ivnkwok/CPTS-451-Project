@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
+import { Route as FaqImport } from './routes/faq'
 import { Route as AboutImport } from './routes/about'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as AddMenuRouteImport } from './routes/add-menu/route'
@@ -22,6 +23,12 @@ import { Route as IndexImport } from './routes/index'
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const FaqRoute = FaqImport.update({
+  id: '/faq',
+  path: '/faq',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -80,6 +87,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -97,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/add-menu': typeof AddMenuRouteRoute
   '': typeof AuthenticatedRoute
   '/about': typeof AboutRoute
+  '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
 }
 
@@ -105,6 +120,7 @@ export interface FileRoutesByTo {
   '/add-menu': typeof AddMenuRouteRoute
   '': typeof AuthenticatedRoute
   '/about': typeof AboutRoute
+  '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
 }
 
@@ -114,6 +130,7 @@ export interface FileRoutesById {
   '/add-menu': typeof AddMenuRouteRoute
   '/_authenticated': typeof AuthenticatedRoute
   '/about': typeof AboutRoute
+  '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
 }
 
@@ -131,6 +148,7 @@ export interface RootRouteChildren {
   AddMenuRouteRoute: typeof AddMenuRouteRoute
   AuthenticatedRoute: typeof AuthenticatedRoute
   AboutRoute: typeof AboutRoute
+  FaqRoute: typeof FaqRoute
   LoginRoute: typeof LoginRoute
 }
 
@@ -139,6 +157,7 @@ const rootRouteChildren: RootRouteChildren = {
   AddMenuRouteRoute: AddMenuRouteRoute,
   AuthenticatedRoute: AuthenticatedRoute,
   AboutRoute: AboutRoute,
+  FaqRoute: FaqRoute,
   LoginRoute: LoginRoute,
 }
 
@@ -156,6 +175,7 @@ export const routeTree = rootRoute
         "/add-menu",
         "/_authenticated",
         "/about",
+        "/faq",
         "/login"
       ]
     },
@@ -170,6 +190,9 @@ export const routeTree = rootRoute
     },
     "/about": {
       "filePath": "about.tsx"
+    },
+    "/faq": {
+      "filePath": "faq.tsx"
     },
     "/login": {
       "filePath": "login.tsx"

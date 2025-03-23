@@ -1,4 +1,4 @@
-import AddMenuItemForm from "../components/AddMenuItem/AddMenuItem";
+import AddMenuItemForm from "../components/AddMenuItem.tsx";
 
 export default function AddMenuPage() {
   return (

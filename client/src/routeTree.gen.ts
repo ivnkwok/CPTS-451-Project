@@ -136,10 +136,17 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/add-menu' | '' | '/about' | '/login'
+  fullPaths: '/' | '/add-menu' | '' | '/about' | '/faq' | '/login'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/add-menu' | '' | '/about' | '/login'
-  id: '__root__' | '/' | '/add-menu' | '/_authenticated' | '/about' | '/login'
+  to: '/' | '/add-menu' | '' | '/about' | '/faq' | '/login'
+  id:
+    | '__root__'
+    | '/'
+    | '/add-menu'
+    | '/_authenticated'
+    | '/about'
+    | '/faq'
+    | '/login'
   fileRoutesById: FileRoutesById
 }
 

@@ -33,7 +33,6 @@ services:
       - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
       - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
-      - FIREBASE_SERVICE_ACCOUNT_KEY_PATH=/app/firebase-admin/dining-hall-management-system-firebase-adminsdk-fbsvc-f2eea09d87.json
     # Volume mount
     volumes:
       - ./firebase-admin:/app/firebase-admin

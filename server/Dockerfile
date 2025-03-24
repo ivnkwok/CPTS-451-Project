@@ -5,7 +5,7 @@ ENV PYTHONUNBUFFERED=1
 
 # Install git
 RUN apt-get update && \
-    apt-get install -y git && \
+    apt-get install -y git dos2unix && \
     rm -rf /var/lib/apt/lists/*
 
 # Create non-root user (using Debian commands)
@@ -21,22 +21,27 @@ RUN python3 -m venv /venv && \
 ENV VIRTUAL_ENV=/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-ENV PYTHONPATH=/code/backend
+ENV PYTHONPATH=/code
 ENV DJANGO_SETTINGS_MODULE=backend.settings
 
 # Set working directory
-WORKDIR /code/backend
+WORKDIR /code
 RUN chown devcontainer:devcontainer /code
 
+# Copy all server files
+COPY . /code/
+RUN chown -R devcontainer:devcontainer /code
+
+# Fix line endings and make entrypoint executable
+RUN dos2unix /code/entrypoint.sh && \
+    chmod +x /code/entrypoint.sh
+
 # Install Python dependencies
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install -r /code/requirements.txt
 
 # Make sure scripts in venv are executable
 RUN chmod +x /venv/bin/*
 
-# Set up entrypoint shell script
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh 
-
 USER devcontainer
+
+ENTRYPOINT ["/code/entrypoint.sh"]

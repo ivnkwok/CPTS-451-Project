@@ -15,8 +15,8 @@ import { Route as LoginImport } from './routes/login'
 import { Route as FaqImport } from './routes/faq'
 import { Route as AboutImport } from './routes/about'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
-import { Route as AddMenuRouteImport } from './routes/add-menu/route'
 import { Route as IndexImport } from './routes/index'
+import { Route as MenuAddMenuImport } from './routes/menu/add-menu'
 
 // Create/Update Routes
 
@@ -43,15 +43,15 @@ const AuthenticatedRoute = AuthenticatedImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AddMenuRouteRoute = AddMenuRouteImport.update({
-  id: '/add-menu',
-  path: '/add-menu',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const MenuAddMenuRoute = MenuAddMenuImport.update({
+  id: '/menu/add-menu',
+  path: '/menu/add-menu',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -64,13 +64,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/add-menu': {
-      id: '/add-menu'
-      path: '/add-menu'
-      fullPath: '/add-menu'
-      preLoaderRoute: typeof AddMenuRouteImport
       parentRoute: typeof rootRoute
     }
     '/_authenticated': {
@@ -101,6 +94,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
+    '/menu/add-menu': {
+      id: '/menu/add-menu'
+      path: '/menu/add-menu'
+      fullPath: '/menu/add-menu'
+      preLoaderRoute: typeof MenuAddMenuImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -108,64 +108,64 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/add-menu': typeof AddMenuRouteRoute
   '': typeof AuthenticatedRoute
   '/about': typeof AboutRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/menu/add-menu': typeof MenuAddMenuRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/add-menu': typeof AddMenuRouteRoute
   '': typeof AuthenticatedRoute
   '/about': typeof AboutRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/menu/add-menu': typeof MenuAddMenuRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/add-menu': typeof AddMenuRouteRoute
   '/_authenticated': typeof AuthenticatedRoute
   '/about': typeof AboutRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/menu/add-menu': typeof MenuAddMenuRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/add-menu' | '' | '/about' | '/faq' | '/login'
+  fullPaths: '/' | '' | '/about' | '/faq' | '/login' | '/menu/add-menu'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/add-menu' | '' | '/about' | '/faq' | '/login'
+  to: '/' | '' | '/about' | '/faq' | '/login' | '/menu/add-menu'
   id:
     | '__root__'
     | '/'
-    | '/add-menu'
     | '/_authenticated'
     | '/about'
     | '/faq'
     | '/login'
+    | '/menu/add-menu'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AddMenuRouteRoute: typeof AddMenuRouteRoute
   AuthenticatedRoute: typeof AuthenticatedRoute
   AboutRoute: typeof AboutRoute
   FaqRoute: typeof FaqRoute
   LoginRoute: typeof LoginRoute
+  MenuAddMenuRoute: typeof MenuAddMenuRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AddMenuRouteRoute: AddMenuRouteRoute,
   AuthenticatedRoute: AuthenticatedRoute,
   AboutRoute: AboutRoute,
   FaqRoute: FaqRoute,
   LoginRoute: LoginRoute,
+  MenuAddMenuRoute: MenuAddMenuRoute,
 }
 
 export const routeTree = rootRoute
@@ -179,18 +179,15 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/add-menu",
         "/_authenticated",
         "/about",
         "/faq",
-        "/login"
+        "/login",
+        "/menu/add-menu"
       ]
     },
     "/": {
       "filePath": "index.tsx"
-    },
-    "/add-menu": {
-      "filePath": "add-menu/route.tsx"
     },
     "/_authenticated": {
       "filePath": "_authenticated.tsx"
@@ -203,6 +200,9 @@ export const routeTree = rootRoute
     },
     "/login": {
       "filePath": "login.tsx"
+    },
+    "/menu/add-menu": {
+      "filePath": "menu/add-menu.tsx"
     }
   }
 }

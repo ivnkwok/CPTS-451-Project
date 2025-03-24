@@ -1,7 +1,23 @@
 import React, { useState } from "react";
 import axios, { AxiosError } from "axios";
 
+/**
+ * A form component to add a new menu item.
+ * Users can input item details, including name, price, category, nutritional information, and an image.
+ *
+ * @component
+ * @returns {JSX.Element} A form for adding a menu item.
+*/
 const AddMenuItemForm = () => {
+  /**
+   * Type definition for the form data state.
+   * @typedef {Object} MenuItemForm
+   * @property {string} name - The name of the menu item.
+   * @property {string} price - The price of the menu item (stored as a string to match input fields).
+   * @property {string} category - The category the menu item belongs to.
+   * @property {string} nutritional_info - Nutritional information of the menu item.
+   * @property {File | null} image - The image file for the menu item (optional).
+  */
   type MenuItemForm = {
     name: string;
     price: string;
@@ -18,6 +34,11 @@ const AddMenuItemForm = () => {
     image: null,
   });
 
+  /**
+   * Handles input field changes and updates state.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement | HTMLSelectElement>} e - The input change event.
+  */
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -28,6 +49,11 @@ const AddMenuItemForm = () => {
     }));
   };
 
+  /**
+   * Handles file input changes and updates the image field in state.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The file input change event.
+  */
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
       ...prev,
@@ -35,6 +61,13 @@ const AddMenuItemForm = () => {
     }));
   };
 
+  /**
+   * Handles form submission, sending the form data to the backend API.
+   * Uses FormData for multipart file upload.
+   *
+   * @async
+   * @param {React.FormEvent} e - The form submit event.
+  */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 

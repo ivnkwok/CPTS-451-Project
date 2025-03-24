@@ -14,11 +14,32 @@ class MenuItemListView(generics.ListAPIView):
 
     def get_queryset(self):
         """
-        Optionally filters the queryset by 'category' query param
-        e.g. /menu/list/?category=Appetizers
+        Optionally filters the queryset by:
+          - category
+          - min_price, max_price
+          - dietary (exact or partial match)
         """
         queryset = super().get_queryset()
-        category = self.request.query_params.get('category')
+        request = self.request
+        category = request.query_params.get('category', None)
+        min_price = request.query_params.get('min_price', None)
+        max_price = request.query_params.get('max_price', None)
+        dietary = request.query_params.get('dietary', None)
+
+        # Filter by category (case-insensitive exact match)
         if category:
             queryset = queryset.filter(category__iexact=category)
+
+        # Filter by min_price
+        if min_price is not None:
+            queryset = queryset.filter(price__gte=min_price)
+
+        # Filter by max_price
+        if max_price is not None:
+            queryset = queryset.filter(price__lte=max_price)
+
+        # Filter by dietary restriction (very basic substring search)
+        if dietary:
+            queryset = queryset.filter(dietary_restrictions__icontains=dietary)
+
         return queryset

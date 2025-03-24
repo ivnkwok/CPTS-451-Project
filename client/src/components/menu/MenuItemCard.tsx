@@ -7,6 +7,7 @@ type MenuItemProps = {
   price: number;
   category: string;
   nutritionalInfo?: string;
+  dietaryRestriction?: string;
   imageUrl?: string;
 };
 
@@ -28,6 +29,7 @@ const MenuItemCard: React.FC<MenuItemProps> = ({
   price,
   category,
   nutritionalInfo,
+  dietaryRestriction,
   imageUrl,
 }) => {
   return (
@@ -42,6 +44,7 @@ const MenuItemCard: React.FC<MenuItemProps> = ({
       <div className={styles["menu-item-details"]}>
         <p className={styles["menu-item-category"]}>{category}</p>
         <h3 className={styles["menu-item-name"]}>{name}</h3>
+        <p className={styles["menu-item-info"]}>{dietaryRestriction}</p>
         <div className={styles['grid']}>
           <button className={styles["menu-item-add-button"]}>
             <FaPlus /> Add to cart

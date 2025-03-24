@@ -16,6 +16,7 @@ const AddMenuItemForm = () => {
    * @property {string} price - The price of the menu item (stored as a string to match input fields).
    * @property {string} category - The category the menu item belongs to.
    * @property {string} nutritional_info - Nutritional information of the menu item.
+   * @property {string} dietary_restrictions - Dietary restriction tag (e.g., Vegan, Halal).
    * @property {File | null} image - The image file for the menu item (optional).
   */
   type MenuItemForm = {
@@ -23,6 +24,7 @@ const AddMenuItemForm = () => {
     price: string;
     category: string;
     nutritional_info: string;
+    dietary_restrictions: string;
     image: File | null;
   };
 
@@ -31,8 +33,11 @@ const AddMenuItemForm = () => {
     price: "",
     category: "",
     nutritional_info: "",
+    dietary_restrictions: "",
     image: null,
   });
+
+  const dietaryOptions = ["None", "Vegan", "Vegetarian", "Halal", "Kosher", "Gluten-Free"];
 
   /**
    * Handles input field changes and updates state.
@@ -134,6 +139,17 @@ const AddMenuItemForm = () => {
         value={formData.nutritional_info}
         onChange={handleChange}
       />
+      <select
+        name="dietary_restrictions"
+        value={formData.dietary_restrictions}
+        onChange={handleChange}
+      >
+        {dietaryOptions.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
       <input
         type="file"
         name="image"

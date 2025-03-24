@@ -7,6 +7,7 @@ class MenuItem(models.Model):
     price = models.DecimalField(max_digits=6, decimal_places=2)
     category = models.CharField(max_length=100)
     nutritional_info = models.TextField(blank=True)
+    dietary_restrictions = models.CharField(max_length=200, blank=True)
     image = models.ImageField(upload_to='menu_images/', blank=True, null=True)
 
     def __str__(self):

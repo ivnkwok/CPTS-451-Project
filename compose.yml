@@ -37,7 +37,11 @@ services:
     volumes:
       - ./firebase-admin:/app/firebase-admin
     working_dir: /code
+<<<<<<< Updated upstream
     entrypoint: ["/code/entrypoint.sh"]
+=======
+    entrypoint: ["/entrypoint.sh"]
+>>>>>>> Stashed changes
     command: python manage.py runserver 0.0.0.0:8000
     # Keep container active and interactive
     tty: true

@@ -33,15 +33,18 @@ services:
       - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
       - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
+      - FIREBASE_SERVICE_ACCOUNT_KEY_PATH=/app/firebase-admin/dining-hall-management-system-firebase-adminsdk-fbsvc-f2eea09d87.json
     # Volume mount
     volumes:
+      - ./server/backend:/code/backend
+      - ./server/menu:/code/menu
+      - ./server/users:/code/users
+      - ./server/authentication:/code/authentication
+      - ./server/manage.py:/code/manage.py
+      - ./server/entrypoint.sh:/entrypoint.sh
       - ./firebase-admin:/app/firebase-admin
-    working_dir: /code
-<<<<<<< Updated upstream
-    entrypoint: ["/code/entrypoint.sh"]
-=======
+    working_dir: /code/backend
     entrypoint: ["/entrypoint.sh"]
->>>>>>> Stashed changes
     command: python manage.py runserver 0.0.0.0:8000
     # Keep container active and interactive
     tty: true
@@ -52,19 +55,19 @@ services:
 
   # PostgreSQL database
   db:
-      image: postgres
-      # Uncomment to persist data across container stops
-      # volumes:
-      #  - ./data/db:/var/lib/postgresql/data
-      environment:
-        - POSTGRES_USER=${POSTGRES_USER}
-        - POSTGRES_PASSWORD=${POSTGRES_PW}
-        - POSTGRES_DB=${POSTGRES_DB}
-      healthcheck:
-        test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
-        interval: 5s
-        timeout: 5s
-        retries: 5
+    image: postgres
+    # Uncomment to persist data across container stops
+    # volumes:
+    #  - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PW}
+      - POSTGRES_DB=${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   # Database management tool
   pgadmin:
@@ -80,5 +83,5 @@ services:
     ports:
       - "5050:80"
     volumes:
-    # Mount the server configuration file
-    - ./pgadmin-servers.json:/pgadmin4/servers.json
+      # Mount the server configuration file
+      - ./pgadmin-servers.json:/pgadmin4/servers.json

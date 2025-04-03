@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as MenuImport } from './routes/menu'
 import { Route as LoginImport } from './routes/login'
+import { Route as BalanceImport } from './routes/balance'
 import { Route as AboutImport } from './routes/about'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
@@ -29,6 +30,12 @@ const MenuRoute = MenuImport.update({
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const BalanceRoute = BalanceImport.update({
+  id: '/balance',
+  path: '/balance',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -80,6 +87,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
+    '/balance': {
+      id: '/balance'
+      path: '/balance'
+      fullPath: '/balance'
+      preLoaderRoute: typeof BalanceImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -120,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AuthenticatedRoute
   '/about': typeof AboutRoute
+  '/balance': typeof BalanceRoute
   '/login': typeof LoginRoute
   '/menu': typeof MenuRouteWithChildren
   '/menu/': typeof MenuIndexRoute
@@ -129,6 +144,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AuthenticatedRoute
   '/about': typeof AboutRoute
+  '/balance': typeof BalanceRoute
   '/login': typeof LoginRoute
   '/menu': typeof MenuIndexRoute
 }
@@ -138,6 +154,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRoute
   '/about': typeof AboutRoute
+  '/balance': typeof BalanceRoute
   '/login': typeof LoginRoute
   '/menu': typeof MenuRouteWithChildren
   '/menu/': typeof MenuIndexRoute
@@ -145,14 +162,15 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/about' | '/login' | '/menu' | '/menu/'
+  fullPaths: '/' | '' | '/about' | '/balance' | '/login' | '/menu' | '/menu/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/about' | '/login' | '/menu'
+  to: '/' | '' | '/about' | '/balance' | '/login' | '/menu'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/about'
+    | '/balance'
     | '/login'
     | '/menu'
     | '/menu/'
@@ -163,6 +181,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRoute
   AboutRoute: typeof AboutRoute
+  BalanceRoute: typeof BalanceRoute
   LoginRoute: typeof LoginRoute
   MenuRoute: typeof MenuRouteWithChildren
 }
@@ -171,6 +190,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRoute,
   AboutRoute: AboutRoute,
+  BalanceRoute: BalanceRoute,
   LoginRoute: LoginRoute,
   MenuRoute: MenuRouteWithChildren,
 }
@@ -188,6 +208,7 @@ export const routeTree = rootRoute
         "/",
         "/_authenticated",
         "/about",
+        "/balance",
         "/login",
         "/menu"
       ]
@@ -200,6 +221,9 @@ export const routeTree = rootRoute
     },
     "/about": {
       "filePath": "about.tsx"
+    },
+    "/balance": {
+      "filePath": "balance.tsx"
     },
     "/login": {
       "filePath": "login.tsx"

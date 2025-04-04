@@ -61,8 +61,11 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:5173')
+    os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:5173'),
+    'http://localhost:5174',
 ]
+
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'backend.urls'
 

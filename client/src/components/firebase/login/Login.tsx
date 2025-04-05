@@ -1,32 +1,28 @@
-import React, { useState } from 'react';
-import { login } from '../../../firebase/firebaseAuth';
-import { useAuth } from '../../../utils/AuthContext';
+import React, { useState } from "react";
+import { useAuth } from "../../../context/AuthContext"; //  path
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { setToken, setUser } = useAuth();
+  const [username, setUsername] = useState(""); // Django uses username by default
+  const [password, setPassword] = useState("");
+  const { login } = useAuth(); // only grab login from context
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { user, token } = await login(email, password);
-      // Store the token and user data in the global auth state
-      setToken(token);
-      setUser(user);
-      console.log('Logged in user:', user);
+      await login(username, password); // this calls your context login
+      console.log("Logged in successfully");
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        type="text"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
       />
       <input
         type="password"

@@ -22,6 +22,8 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('menu/', include('menu.urls')),
+    path('users/', include('users.urls')),
+    path('auth/', include('authentication.urls')),
 ]
 
 # Allows us to serve images in development

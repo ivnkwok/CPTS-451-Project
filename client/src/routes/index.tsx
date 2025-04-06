@@ -6,8 +6,6 @@ import TopUpForm from "../components/balance/TopUpForm";
 const MenuPage = () => {
   return (
     <div>
-      <BalanceDisplay />
-      <TopUpForm />
       <Menu />
     </div>
   );

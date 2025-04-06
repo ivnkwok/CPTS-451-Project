@@ -57,7 +57,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'    
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -69,6 +69,11 @@ CORS_ALLOWED_ORIGINS = [
     os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:5173'),
     'http://localhost:5174',
 ]
+
+
+SESSION_COOKIE_SAMESITE = "Lax"  
+SESSION_COOKIE_SECURE = False
+
 
 CORS_ALLOW_CREDENTIALS = True
 

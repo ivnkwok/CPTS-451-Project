@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import MenuItemCard from '../../components/menu/MenuItemCard';
 import styles from './menu.module.css';
 import axios from 'axios';
-import { FaFilter, FaXmark } from "react-icons/fa6";
+import { FaFilter, FaXmark, } from "react-icons/fa6";
 
 /**
-  * Represents the structure of a menu item.
+  * Represents the structure of a menu item and enforces type safety.
+  * 
   * @typedef {Object} MenuItem
   * @property {number} id - Unique identifier of the menu item.
   * @property {string} name - Name of the menu item.
@@ -49,15 +50,17 @@ const Menu = () => {
       // We can pass filters or default to current states
       const params = {
         category: selectedCategory,
-        ...(filters || {})
+        ...(filters || {}),
       };
-      const response = await axios.get('http://localhost:8000/menu/list/', { params });
+      const response = await axios.get("http://localhost:8000/menu/list/", {
+        params,
+      });
       setMenuItems(response.data);
     } catch (error) {
-      console.error('Error fetching menu items:', error);
+      console.error("Error fetching menu items:", error);
     }
   };
-
+  
   /**
    * Updates the selected category.
    *
@@ -135,7 +138,7 @@ const Menu = () => {
             {/* Filter panel */}
             {showFilterPanel && (
               <div className={styles["filter-panel"]}>
-                <h3 style={{paddingBottom: '1rem', fontSize: '1.5rem', fontWeight: 'bold'}}>Filter Options</h3>
+                <h3 style={{ paddingBottom: '1rem', fontSize: '1.5rem', fontWeight: 'bold' }}>Filter Options</h3>
                 <div className={styles["filter-row"]}>
                   <div className={styles["filter-group"]}>
                     <label className={styles["filter-label"]} htmlFor='minPrice'>Min Price</label>
@@ -189,9 +192,9 @@ const Menu = () => {
                   name={item.name}
                   price={item.price}
                   category={item.category}
-                  nutritionalInfo={item.nutritional_info}
                   dietaryRestriction={item.dietary_restrictions}
                   imageUrl={item.image ? item.image : undefined}
+                  nutritionalInfo={item.nutritional_info}
                 />
               ))}
 

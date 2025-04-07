@@ -23,11 +23,12 @@ const AddMenuItemForm = () => {
     name: string;
     price: string;
     category: string;
-    nutritional_info: string; // This will hold the combined string
+    nutritional_info: string;
     nutritionalCalories: string;
     nutritionalProtein: string;
     nutritionalCarbs: string;
     nutritionalFats: string;
+    nutritionalAllergens: string;
     dietary_restrictions: string;
     image: File | null;
   };
@@ -41,6 +42,7 @@ const AddMenuItemForm = () => {
     nutritionalProtein: "",
     nutritionalCarbs: "",
     nutritionalFats: "",
+    nutritionalAllergens: "",
     dietary_restrictions: "",
     image: null,
   });
@@ -85,8 +87,8 @@ const AddMenuItemForm = () => {
     e.preventDefault();
   
     // Combine nutritional data into one string
-    const { nutritionalCalories, nutritionalProtein, nutritionalCarbs, nutritionalFats } = formData;
-    const combinedNutritionalInfo = `${nutritionalCalories}, ${nutritionalProtein}, ${nutritionalCarbs}, ${nutritionalFats}`;
+    const { nutritionalCalories, nutritionalProtein, nutritionalCarbs, nutritionalFats, nutritionalAllergens } = formData;
+    const combinedNutritionalInfo = `${nutritionalCalories}, ${nutritionalProtein}, ${nutritionalCarbs}, ${nutritionalFats}, ${nutritionalAllergens}`;
     
     // Create a new object with the combined nutritional_info
     const newFormData = {
@@ -184,7 +186,7 @@ const AddMenuItemForm = () => {
       <input
         name="nutritionalAllergens"
         placeholder="Allergens"
-        value={formData.nutritionalFats}
+        value={formData.nutritionalAllergens}
         onChange={handleChange}
       />
       <select

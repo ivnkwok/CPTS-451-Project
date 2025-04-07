@@ -31,14 +31,15 @@ type MenuItem = {
  * Consists of a sidebar with categories and a main section for menu items.
  *
  * @returns {JSX.Element} A structured menu layout with categories and placeholders.
-*/
+ */
 const Menu = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('Appetizers');
+  const [selectedCategory, setSelectedCategory] =
+    useState<string>("Appetizers");
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [showFilterPanel, setShowFilterPanel] = useState<boolean>(false);
-  const [minPrice, setMinPrice] = useState<string>('');
-  const [maxPrice, setMaxPrice] = useState<string>('');
-  const [dietary, setDietary] = useState<string>('');
+  const [minPrice, setMinPrice] = useState<string>("");
+  const [maxPrice, setMaxPrice] = useState<string>("");
+  const [dietary, setDietary] = useState<string>("");
 
   // Fetch menu items whenever selectedCategory changes or filter changes
   useEffect(() => {
@@ -65,12 +66,12 @@ const Menu = () => {
    * Updates the selected category.
    *
    * @param {string} category - The category to filter by.
-  */
+   */
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
-    setMinPrice('');
-    setMaxPrice('');
-    setDietary('');
+    setMinPrice("");
+    setMaxPrice("");
+    setDietary("");
   };
 
   // Called when user clicks "Search" in the filter panel
@@ -84,9 +85,8 @@ const Menu = () => {
   };
 
   return (
-    <div className={styles['wrapper']}>
-      <div className={styles['two-column-layout']}>
-
+    <div className={styles["wrapper"]}>
+      <div className={styles["two-column-layout"]}>
         {/* LEFT COLUMN (Sidebar) */}
         <div className={styles["menu-left"]}>
           <aside className={styles["menu-sidebar"]}>
@@ -95,28 +95,38 @@ const Menu = () => {
               Globally inspired flavors, prepared with local love.
             </p>
 
-            <hr/>
+            <hr />
 
             <ul className={styles["menu-categories"]}>
-              {['Appetizers', 'Soups & Salads', 'Entrees', 'Sides', 'Desserts', 'Beverages'].map(
-                (category) => (
-                  <li
-                    key={category}
-                    onClick={() => handleCategoryClick(category)}
-                    className={selectedCategory === category ? styles['active-category'] : ''}
-                  >
-                    {category}
-                  </li>
-                )
-              )}
+              {[
+                "Appetizers",
+                "Soups & Salads",
+                "Entrees",
+                "Sides",
+                "Desserts",
+                "Beverages",
+              ].map((category) => (
+                <li
+                  key={category}
+                  onClick={() => handleCategoryClick(category)}
+                  className={
+                    selectedCategory === category
+                      ? styles["active-category"]
+                      : ""
+                  }
+                >
+                  {category}
+                </li>
+              ))}
             </ul>
 
-            <hr/>
+            <hr />
 
             <p className={styles["menu-note"]}>
-              While we offer vegan, vegetarian, and gluten-free dishes, please note that all items
-              in our restaurant are prepared in facilities with shared cooking equipment and
-              surfaces, and cross-contact with major food allergens may occur.
+              While we offer vegan, vegetarian, and gluten-free dishes, please
+              note that all items in our restaurant are prepared in facilities
+              with shared cooking equipment and surfaces, and cross-contact with
+              major food allergens may occur.
             </p>
 
             <button className={styles["button"]}>View Allergen Guide</button>
@@ -126,12 +136,29 @@ const Menu = () => {
         {/* RIGHT COLUMN (Main Content) */}
         <div className={styles["menu-right"]}>
           <main className={styles["menu-content"]}>
-
             {/* Header row with category title and filter icon/button */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2 className={styles["category-title"]}>{selectedCategory.toUpperCase()}</h2>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <h2 className={styles["category-title"]}>
+                {selectedCategory.toUpperCase()}
+              </h2>
               <button onClick={() => setShowFilterPanel(!showFilterPanel)}>
-                {showFilterPanel ? <FaXmark aria-label='Close menu filter option button.' title='Close filter button.' /> : <FaFilter aria-label='Open menu filter option button.' title='Open filter button.' />}
+                {showFilterPanel ? (
+                  <FaXmark
+                    aria-label="Close menu filter option button."
+                    title="Close filter button."
+                  />
+                ) : (
+                  <FaFilter
+                    aria-label="Open menu filter option button."
+                    title="Open filter button."
+                  />
+                )}
               </button>
             </div>
 
@@ -141,7 +168,12 @@ const Menu = () => {
                 <h3 style={{ paddingBottom: '1rem', fontSize: '1.5rem', fontWeight: 'bold' }}>Filter Options</h3>
                 <div className={styles["filter-row"]}>
                   <div className={styles["filter-group"]}>
-                    <label className={styles["filter-label"]} htmlFor='minPrice'>Min Price</label>
+                    <label
+                      className={styles["filter-label"]}
+                      htmlFor="minPrice"
+                    >
+                      Min Price
+                    </label>
                     <input
                       id="minPrice"
                       name="minPrice"
@@ -151,7 +183,12 @@ const Menu = () => {
                     />
                   </div>
                   <div className={styles["filter-group"]}>
-                    <label className={styles["filter-label"]} htmlFor='maxPrice'>Max Price</label>
+                    <label
+                      className={styles["filter-label"]}
+                      htmlFor="maxPrice"
+                    >
+                      Max Price
+                    </label>
                     <input
                       id="maxPrice"
                       name="maxPrice"
@@ -161,7 +198,9 @@ const Menu = () => {
                     />
                   </div>
                   <div className={styles["filter-group"]}>
-                    <label className={styles["filter-label"]} htmlFor='dietary'>Dietary Restriction</label>
+                    <label className={styles["filter-label"]} htmlFor="dietary">
+                      Dietary Restriction
+                    </label>
                     <select
                       id="dietary"
                       name="dietary"
@@ -179,7 +218,10 @@ const Menu = () => {
                   </div>
                 </div>
 
-                <button className={styles["button"]} onClick={handleFilterSearch}>
+                <button
+                  className={styles["button"]}
+                  onClick={handleFilterSearch}
+                >
                   Search
                 </button>
               </div>

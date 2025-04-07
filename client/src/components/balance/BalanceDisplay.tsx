@@ -1,21 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { fetchBalance } from "../../utils/fetchBalance";
+import React from "react";
 
-const BalanceDisplay = () => {
-  const [balance, setBalance] = useState<string | null>(null);
+type BalanceDisplayProps = {
+  balance: number | null | undefined;
+};
 
-  useEffect(() => {
-    const loadBalance = async () => {
-      const amt = await fetchBalance();
-      setBalance(amt);
-    };
-    loadBalance();
-  }, []);
+const BalanceDisplay = ({ balance }: BalanceDisplayProps) => {
+  const isNumber = typeof balance === "number" && !isNaN(balance);
 
   return (
     <div>
-      <h2>Your Balance</h2>
-      {balance !== null ? <p>${balance}</p> : <p>Loading balance...</p>}
+      <h3>Your Balance</h3>
+      {isNumber ? <p>${balance.toFixed(2)}</p> : <p>Loading balance...</p>}
     </div>
   );
 };

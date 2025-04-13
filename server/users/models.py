@@ -18,14 +18,13 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.get_role_display()}"
 
-    @property
-    def has_permission(self, permission_code):
-        if self.role == 'admin':
-            return True
-        elif self.role == 'staff':
-            return permission_code in ['view_balance', 'process_payment']
-        elif self.role == 'student':
-            return permission_code in ['view_own_balance', 'make_payment']
+    def has_permission(self, permission):
+        if permission == 'view_own_balance':
+            return self.role in ['student', 'staff', 'admin']
+        elif permission == 'view_all_balances':
+            return self.role in ['staff', 'admin']
+        elif permission == 'manage_balances':
+            return self.role in ['staff', 'admin']
         return False
 
 # Signal to create UserProfile when a new User is created

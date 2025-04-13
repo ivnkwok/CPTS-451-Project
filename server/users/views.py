@@ -12,6 +12,31 @@ from rest_framework import status
 
 # Create your views here.
 
+class UserProfileView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        try:
+            profile = request.user.profile
+            return Response({
+                'id': request.user.id,
+                'username': request.user.username,
+                'email': request.user.email,
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name,
+                'is_staff': request.user.is_staff,
+                'profile': {
+                    'student_id': profile.student_id,
+                    'balance': float(profile.balance),
+                    'role': profile.role
+                }
+            })
+        except UserProfile.DoesNotExist:
+            return Response(
+                {'error': 'Profile not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
 class UserBalanceView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     
@@ -43,10 +68,16 @@ class StudentBalanceView(APIView):
             )
 
 class OwnBalanceView(APIView):
-    @require_permission('view_own_balance')
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request):
         try:
             profile = request.user.profile
+            if not profile.has_permission('view_own_balance'):
+                return Response(
+                    {'error': 'Permission denied'},
+                    status=status.HTTP_403_FORBIDDEN
+                )
             return Response({
                 'student_id': profile.student_id,
                 'name': request.user.get_full_name() or request.user.username,

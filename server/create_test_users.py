@@ -1,5 +1,11 @@
 import os
 import django
+import sys
+
+# Add the project directory to the Python path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Set up Django environment
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
 django.setup()
 
@@ -7,64 +13,55 @@ from django.contrib.auth.models import User
 from users.models import UserProfile
 
 def create_test_users():
-    # Create staff user
+    # Delete existing test users if they exist
     try:
-        staff = User.objects.create_user(
-            username='teststaff',
+        User.objects.filter(username__in=['staff', 'student', 'admin']).delete()
+        print("Deleted existing test users")
+    except Exception as e:
+        print(f"Error deleting existing users: {e}")
+
+    try:
+        # Create staff user
+        staff_user = User.objects.create_user(
+            username='staff',
             email='staff@example.com',
-            password='testpassword123',
+            password='staffpass123',
             is_staff=True
         )
-        UserProfile.objects.create(
-            user=staff,
-            role='staff',
-            balance=0.00
-        )
-        print(f"Created staff user: {staff.username}")
-        print(f"Email: {staff.email}")
-        print(f"Password: testpassword123")
-    except Exception as e:
-        print(f"Staff user may already exist: {str(e)}")
+        staff_profile = staff_user.profile
+        staff_profile.role = 'staff'
+        staff_profile.balance = 100.00  # Initial balance for staff
+        staff_profile.save()
+        print(f"Created staff user: {staff_user.username} with role {staff_profile.role} and balance ${staff_profile.balance}")
 
-    # Create student user
-    try:
-        student = User.objects.create_user(
-            username='teststudent',
+        # Create student user
+        student_user = User.objects.create_user(
+            username='student',
             email='student@example.com',
-            password='testpassword123'
+            password='studentpass123'
         )
-        UserProfile.objects.create(
-            user=student,
-            role='student',
-            student_id='12345',
-            balance=100.00
-        )
-        print(f"\nCreated student user: {student.username}")
-        print(f"Email: {student.email}")
-        print(f"Password: testpassword123")
-        print(f"Student ID: 12345")
-    except Exception as e:
-        print(f"Student user may already exist: {str(e)}")
+        student_profile = student_user.profile
+        student_profile.role = 'student'
+        student_profile.balance = 50.00  # Initial balance for student
+        student_profile.save()
+        print(f"Created student user: {student_user.username} with role {student_profile.role} and balance ${student_profile.balance}")
 
-    # Create admin user
-    try:
-        admin = User.objects.create_superuser(
+        # Create admin user
+        admin_user = User.objects.create_user(
             username='admin',
             email='admin@example.com',
-            password='adminpassword123'
+            password='adminpass123',
+            is_staff=True,
+            is_superuser=True
         )
-        UserProfile.objects.create(
-            user=admin,
-            role='admin',
-            balance=0.00
-        )
-        print(f"\nCreated admin user: {admin.username}")
-        print(f"Email: {admin.email}")
-        print(f"Password: adminpassword123")
+        admin_profile = admin_user.profile
+        admin_profile.role = 'admin'
+        admin_profile.balance = 200.00  # Initial balance for admin
+        admin_profile.save()
+        print(f"Created admin user: {admin_user.username} with role {admin_profile.role} and balance ${admin_profile.balance}")
+
     except Exception as e:
-        print(f"Admin user may already exist: {str(e)}")
+        print(f"Error creating test users: {e}")
 
 if __name__ == '__main__':
-    print("Creating test users...")
-    create_test_users()
-    print("\nTest users created successfully!") 
+    create_test_users() 

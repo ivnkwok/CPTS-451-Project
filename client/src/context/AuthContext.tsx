@@ -1,29 +1,37 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import axios from "../utils/axios";
 
-// Define the shape of your auth context
 type User = {
   username: string;
   email: string;
 };
 
-type AuthContextType = {
+interface AuthContextType {
+  token: string | null;
   user: User | null;
+  isLoading: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  isLoading: boolean;
-};
+  setToken: (token: string | null) => void;
+  setUser: (user: User | null) => void;
+}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Attempt to fetch user from session (if already logged in)
     const fetchUser = async () => {
       try {
         const res = await axios.get("http://localhost:8000/auth/user/", {
@@ -56,16 +64,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       { withCredentials: true }
     );
     setUser(null);
+    setToken(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider
+      value={{ token, user, isLoading, login, logout, setToken, setUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Hook for child components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

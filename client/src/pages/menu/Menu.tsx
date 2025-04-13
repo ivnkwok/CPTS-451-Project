@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react';
-import MenuItemCard from '../../components/menu/MenuItemCard';
-import styles from './menu.module.css';
-import axios from 'axios';
-import { FaFilter, FaXmark, } from "react-icons/fa6";
+import { useEffect, useState } from "react";
+import MenuItemCard from "../../components/menu/MenuItemCard";
+import styles from "./menu.module.css";
+import axios from "../../utils/axios";
+import { FaFilter, FaXmark } from "react-icons/fa6";
+import BalanceDisplay from "../../components/balance/BalanceDisplay";
+import TopUpForm from "../../components/balance/TopUpForm";
+import { useAuth } from "../../context/AuthContext";
 
 /**
   * Represents the structure of a menu item and enforces type safety.
@@ -40,6 +43,24 @@ const Menu = () => {
   const [minPrice, setMinPrice] = useState<string>("");
   const [maxPrice, setMaxPrice] = useState<string>("");
   const [dietary, setDietary] = useState<string>("");
+  const { user, isLoading } = useAuth();
+  const [balance, setBalance] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      try {
+        const res = await axios.get("/users/balance/");
+
+        setBalance(Number(res.data.amount));
+      } catch (err) {
+        console.error("Error fetching balance:", err);
+      }
+    };
+
+    if (!isLoading && user) {
+      fetchBalance();
+    }
+  }, [isLoading, user]);
 
   // Fetch menu items whenever selectedCategory changes or filter changes
   useEffect(() => {
@@ -53,9 +74,8 @@ const Menu = () => {
         category: selectedCategory,
         ...(filters || {}),
       };
-      const response = await axios.get("http://localhost:8000/menu/list/", {
-        params,
-      });
+      const response = await axios.get("/menu/list/", { params });
+
       setMenuItems(response.data);
     } catch (error) {
       console.error("Error fetching menu items:", error);
@@ -91,6 +111,14 @@ const Menu = () => {
         <div className={styles["menu-left"]}>
           <aside className={styles["menu-sidebar"]}>
             <h2 className={styles["menu-title"]}>MENU</h2>
+
+            {user && (
+              <div style={{ padding: "1rem 0" }}>
+                <BalanceDisplay balance={balance} />
+                <TopUpForm onTopUpSuccess={setBalance} />
+              </div>
+            )}
+
             <p className={styles["menu-tagline breakout"]}>
               Globally inspired flavors, prepared with local love.
             </p>

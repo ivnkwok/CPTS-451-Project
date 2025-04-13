@@ -24,6 +24,11 @@ const AddMenuItemForm = () => {
     price: string;
     category: string;
     nutritional_info: string;
+    nutritionalCalories: string;
+    nutritionalProtein: string;
+    nutritionalCarbs: string;
+    nutritionalFats: string;
+    nutritionalAllergens: string;
     dietary_restrictions: string;
     image: File | null;
   };
@@ -33,6 +38,11 @@ const AddMenuItemForm = () => {
     price: "",
     category: "",
     nutritional_info: "",
+    nutritionalCalories: "",
+    nutritionalProtein: "",
+    nutritionalCarbs: "",
+    nutritionalFats: "",
+    nutritionalAllergens: "",
     dietary_restrictions: "",
     image: null,
   });
@@ -75,14 +85,24 @@ const AddMenuItemForm = () => {
   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
+    // Combine nutritional data into one string
+    const { nutritionalCalories, nutritionalProtein, nutritionalCarbs, nutritionalFats, nutritionalAllergens } = formData;
+    const combinedNutritionalInfo = `${nutritionalCalories}, ${nutritionalProtein}, ${nutritionalCarbs}, ${nutritionalFats}, ${nutritionalAllergens}`;
+    
+    // Create a new object with the combined nutritional_info
+    const newFormData = {
+      ...formData,
+      nutritional_info: combinedNutritionalInfo,
+    };
+  
     const data = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
+    Object.entries(newFormData).forEach(([key, value]) => {
       if (value !== null) {
         data.append(key, value);
       }
     });
-
+  
     try {
       const response = await axios.post(
         "http://localhost:8000/menu/create/",
@@ -95,7 +115,7 @@ const AddMenuItemForm = () => {
       console.log("Success:", response.data);
     } catch (error: unknown) {
       const err = error as AxiosError;
-
+  
       if (err.response) {
         console.error("Server responded with:", err.response.data);
         alert(`Failed to add item: ${JSON.stringify(err.response.data)}`);
@@ -108,7 +128,7 @@ const AddMenuItemForm = () => {
       }
     }
   };
-
+  
   return (
     <form onSubmit={handleSubmit} className="add-menu-form">
       <input
@@ -133,10 +153,40 @@ const AddMenuItemForm = () => {
         onChange={handleChange}
         required
       />
+
+      {/* New nutritional info fields */}
       <input
-        name="nutritional_info"
-        placeholder="Nutritional Info"
-        value={formData.nutritional_info}
+        name="nutritionalCalories"
+        placeholder="Calories"
+        type="number"
+        value={formData.nutritionalCalories}
+        onChange={handleChange}
+      />
+      <input
+        name="nutritionalProtein"
+        placeholder="Protein (g)"
+        type="number"
+        value={formData.nutritionalProtein}
+        onChange={handleChange}
+      />
+      <input
+        name="nutritionalCarbs"
+        placeholder="Carbs (g)"
+        type="number"
+        value={formData.nutritionalCarbs}
+        onChange={handleChange}
+      />
+      <input
+        name="nutritionalFats"
+        placeholder="Fats (g)"
+        type="number"
+        value={formData.nutritionalFats}
+        onChange={handleChange}
+      />
+      <input
+        name="nutritionalAllergens"
+        placeholder="Allergens"
+        value={formData.nutritionalAllergens}
         onChange={handleChange}
       />
       <select

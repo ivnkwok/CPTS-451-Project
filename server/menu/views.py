@@ -43,3 +43,8 @@ class MenuItemListView(generics.ListAPIView):
             queryset = queryset.filter(dietary_restrictions__icontains=dietary)
 
         return queryset
+    
+class MenuDetailItemUpdateDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MenuItem.objects.all()
+    serializer_class = MenuItemSerializer
+    permission_classes = [permissions.AllowAny]

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
 type MenuItem = {
@@ -11,21 +11,36 @@ type MenuItem = {
     image?: string;
 };
 
+const [imageFile, setImageFile] = useState<File>() 
+const [imageURL, setImageURL] = useState<string>()
 
+const updateMenuItem = async (menuItem: MenuItem) => {
+  const api = `http://localhost:8000/menu/item/${menuItem.id}/`
+  try {
+    console.log(menuItem)
+    const res = await axios.put(api, menuItem)
+    return res.data
+  }
+  catch (error) {
+    console.error("Error updating menu item:", error)
+    throw error
+  }
+}
 
 const MenuItems: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
-  const fetchMenuItems = async () => {
-      try {
-        const response = await axios.get("http://localhost:8000/menu/list/", {
-        });
+  const fetchMenuItems = useCallback(async () => {
+    try {
+        const response = await axios.get("http://localhost:8000/menu/list/");
         setMenuItems(response.data);
-      } catch (error) {
+    } catch (error) {
         console.error("Error fetching menu items:", error);
-      }
-    };
+    } finally {
+        setLoading(false);
+    }
+  }, []);
 
   if (loading) {
     fetchMenuItems()
@@ -35,32 +50,48 @@ const MenuItems: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const form = e.currentTarget
 
-    const target = e.currentTarget;
-    const data: Record<string, string> = {};
+    const dataDiv = form.querySelector('div[data-id]') as HTMLFormElement
+    const inputs = form.querySelectorAll('input')
+    const imageTag = form.querySelector('img[alt="image"]') as HTMLImageElement
 
-    Array.from(target.children).forEach((child, index) => {
-      console.log(child)
-      if (child instanceof HTMLInputElement) {
-        data[`item${index}`] = child.value || "";
-      }
-    });
-    console.log(data)
+    console.log(imageTag)
 
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/menu/create/",
-        data,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
+    const menuItem: MenuItem = {
+        id: dataDiv ? parseInt(dataDiv.dataset.id || '0') : 0,
+        name: '',
+        price: 0,
+        category: ''
+      };
+
+      inputs.forEach(input => {
+        const value = input.value || input.placeholder;
+      
+        switch (input.name) {
+          case 'name':
+            menuItem.name = value;
+            break;
+          case 'price':
+            menuItem.price = parseFloat(value);
+            break;
+          case 'category':
+            menuItem.category = value;
+            break;
+          case 'nutritional_info':
+            menuItem.nutritional_info = value;
+            break;
+          case 'image':
+            //skip
+            break;
         }
-      );
-      alert("Menu item added!");
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error adding menu item:", error);
-      alert("Failed to add item.");
-    }
+      });
+
+      if (imageTag?.src) {
+        menuItem.image = imageTag.src
+      }
+
+      updateMenuItem(menuItem)
   };
 
 //   if (error) {
@@ -72,6 +103,7 @@ const MenuItems: React.FC = () => {
       <ul>
         {menuItems.map((item) => (
           <form onSubmit={handleSubmit} className="add-menu-form">
+          <div data-id ={item.id}></div>
           <input
             name="name"
             placeholder = "Name"

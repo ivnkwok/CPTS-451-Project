@@ -7,13 +7,18 @@ services:
     ports:
       - "5173:5173"
     volumes:
+      - ./client:/app/client
       - /app/client/node_modules # Allow container to manage its own dependencies
-      - .:/app
     working_dir: /app/client
     environment:
       - NODE_ENV=development
+      - VITE_API_URL=http://localhost:8000
     # Enable HMR websocket connections
     command: npm run dev -- --host
+    networks:
+      - app-network
+    depends_on:
+      - server
 
   # Django web application
   server:
@@ -28,37 +33,41 @@ services:
       - "8000:8000"
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PW=${POSTGRES_PW}
+      - POSTGRES_PASSWORD=${POSTGRES_PW}
       - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=db
       - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
       - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
-      - FIREBASE_SERVICE_ACCOUNT_KEY_PATH=/app/firebase-admin/dining-hall-management-system-firebase-adminsdk-fbsvc-f2eea09d87.json
-    # Volume mount
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DJANGO_DEBUG=True
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
+      - CORS_ALLOWED_ORIGINS=http://localhost:5173
     volumes:
-      - ./server/backend:/code/backend
-      - ./server/menu:/code/menu
-      - ./server/users:/code/users
-      - ./server/authentication:/code/authentication
-      - ./server/manage.py:/code/manage.py
-      - ./server/entrypoint.sh:/entrypoint.sh
-      - ./firebase-admin:/app/firebase-admin
-    working_dir: /code/backend
-    entrypoint: ["/entrypoint.sh"]
-    command: python manage.py runserver 0.0.0.0:8000
+      - ./server:/app/server
+      - static_volume:/app/server/backend/static
+      - media_volume:/app/server/backend/media
+    working_dir: /app/server
+    entrypoint: ["/app/server/entrypoint.sh"]
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             python manage.py runserver 0.0.0.0:8000"
     # Keep container active and interactive
     tty: true
     stdin_open: true
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - app-network
 
   # PostgreSQL database
   db:
-    image: postgres
+    image: postgres:15
     # Uncomment to persist data across container stops
-    # volumes:
-    #  - ./data/db:/var/lib/postgresql/data
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PW}
@@ -68,6 +77,33 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - app-network
+
+  # Test service
+  test:
+    build:
+      context: ./server
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PW}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=db
+      - DJANGO_SETTINGS_MODULE=backend.settings
+    volumes:
+      - ./server:/app/server
+    working_dir: /app/server
+    command: >
+      sh -c "python manage.py wait_for_db &&
+             python manage.py migrate &&
+             python manage.py test users.tests.test_permissions"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
 
   # Database management tool
   pgadmin:
@@ -85,3 +121,16 @@ services:
     volumes:
       # Mount the server configuration file
       - ./pgadmin-servers.json:/pgadmin4/servers.json
+    networks:
+      - app-network
+    depends_on:
+      - db
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:

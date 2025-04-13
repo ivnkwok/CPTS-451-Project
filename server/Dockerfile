@@ -3,12 +3,14 @@ FROM python:3.11.11-slim-bookworm
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Install git
+# Install system dependencies
 RUN apt-get update && \
-    apt-get install -y git dos2unix && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y \
+    git \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
 
-# Create non-root user (using Debian commands)
+# Create non-root user
 RUN groupadd -g 1000 devcontainer && \
     useradd -m -u 1000 -g devcontainer devcontainer
 
@@ -16,32 +18,32 @@ RUN groupadd -g 1000 devcontainer && \
 RUN python3 -m venv /venv && \
     chown -R devcontainer:devcontainer /venv
 
-# Set environment path so virtual environment is used by default
-# when running python commands
+# Set environment variables
 ENV VIRTUAL_ENV=/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-
-ENV PYTHONPATH=/code
+ENV PYTHONPATH=/app/server
 ENV DJANGO_SETTINGS_MODULE=backend.settings
 
 # Set working directory
-WORKDIR /code
-RUN chown devcontainer:devcontainer /code
+WORKDIR /app/server
+RUN chown devcontainer:devcontainer /app
 
-# Copy all server files
-COPY . /code/
-RUN chown -R devcontainer:devcontainer /code
-
-# Fix line endings and make entrypoint executable
-RUN dos2unix /code/entrypoint.sh && \
-    chmod +x /code/entrypoint.sh
-
-# Install Python dependencies
-RUN pip install -r /code/requirements.txt
+# Copy requirements first to leverage Docker cache
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Make sure scripts in venv are executable
 RUN chmod +x /venv/bin/*
 
-USER devcontainer
+# Copy project files
+COPY . .
 
-ENTRYPOINT ["/code/entrypoint.sh"]
+# Set up entrypoint shell script
+COPY entrypoint.sh /app/server/entrypoint.sh
+RUN chmod +x /app/server/entrypoint.sh
+
+# Create necessary directories
+RUN mkdir -p /app/server/backend/static /app/server/backend/media && \
+    chown -R devcontainer:devcontainer /app/server/backend/static /app/server/backend/media
+
+USER devcontainer

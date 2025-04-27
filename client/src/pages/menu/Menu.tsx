@@ -50,7 +50,6 @@ const Menu = () => {
     const fetchBalance = async () => {
       try {
         const res = await axios.get("/users/balance/");
-
         setBalance(Number(res.data.amount));
       } catch (err) {
         console.error("Error fetching balance:", err);
@@ -88,6 +87,7 @@ const Menu = () => {
    * @param {string} category - The category to filter by.
    */
   const handleCategoryClick = (category: string) => {
+    console.log(user);
     setSelectedCategory(category);
     setMinPrice("");
     setMaxPrice("");

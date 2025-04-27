@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "../../utils/axios";
 import Cookies from "js-cookie";
+import { useBalance } from './BalanceContext';
 
 type TopUpFormProps = {
   onTopUpSuccess: (newBalance: number) => void;
@@ -9,6 +10,7 @@ type TopUpFormProps = {
 const TopUpForm = ({ onTopUpSuccess }: TopUpFormProps) => {
   const [amount, setAmount] = useState("");
   const [message, setMessage] = useState("");
+  const {refreshBalance} = useBalance();
 
   const handleTopUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,6 +46,7 @@ const TopUpForm = ({ onTopUpSuccess }: TopUpFormProps) => {
       console.error("Top-up error:", err);
       setMessage("Top-up failed. Please try again.");
     }
+    refreshBalance();
   };
 
   return (

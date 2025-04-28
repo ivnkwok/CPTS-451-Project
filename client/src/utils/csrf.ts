@@ -1,13 +1,14 @@
 import axios from "axios";
 
-export const getCSRFToken = async () => {
+export async function getCSRFToken(): Promise<string> {
   try {
     await axios.get("http://localhost:8000/users/csrf/", {
       withCredentials: true,
     });
-    console.log("CSRF token set via cookie.");
+    const match = document.cookie.match(/(^|;\s*)csrftoken=([^;]+)/);
+    return match ? match[2] : "";
   } catch (err) {
     console.error("Failed to get CSRF token:", err);
+    return "";
   }
-};
-
+}

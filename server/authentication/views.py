@@ -40,6 +40,8 @@ def user_view(request):
         return JsonResponse({
             "username": user.username,
             "email": user.email,
+            "is_staff": user.is_staff,
+            "groups": list(user.groups.values_list('name', flat=True)),
         })
     return JsonResponse({"error": "Not authenticated"}, status=401)
 
@@ -53,7 +55,7 @@ class signup_view(APIView):
         username = request.data.get('username')
         email = request.data.get('email')
         password = request.data.get('password')
-        role = request.data.get('role', 'student')  # default to student if not provided
+        role = request.data.get('role', 'student')
 
         if not username or not password:
             return Response(
@@ -61,7 +63,6 @@ class signup_view(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Create the user with a hashed password
         try:
             user = User.objects.create(
                 username=username,
@@ -74,7 +75,6 @@ class signup_view(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Optional: Assign role using Django groups (ensure these groups exist or are created)
         if role in ['admin', 'staff', 'student']:
             group, created = Group.objects.get_or_create(name=role)
             user.groups.add(group)

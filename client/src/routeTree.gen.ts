@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as SignupImport } from './routes/signup'
 import { Route as LoginImport } from './routes/login'
+import { Route as FeedbackImport } from './routes/feedback'
 import { Route as FaqImport } from './routes/faq'
 import { Route as AboutImport } from './routes/about'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
@@ -30,6 +31,12 @@ const SignupRoute = SignupImport.update({
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const FeedbackRoute = FeedbackImport.update({
+  id: '/feedback',
+  path: '/feedback',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -94,6 +101,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FaqImport
       parentRoute: typeof rootRoute
     }
+    '/feedback': {
+      id: '/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof FeedbackImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -125,6 +139,7 @@ export interface FileRoutesByFullPath {
   '': typeof AuthenticatedRoute
   '/about': typeof AboutRoute
   '/faq': typeof FaqRoute
+  '/feedback': typeof FeedbackRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/menu/add-menu': typeof MenuAddMenuRoute
@@ -135,6 +150,7 @@ export interface FileRoutesByTo {
   '': typeof AuthenticatedRoute
   '/about': typeof AboutRoute
   '/faq': typeof FaqRoute
+  '/feedback': typeof FeedbackRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/menu/add-menu': typeof MenuAddMenuRoute
@@ -146,6 +162,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRoute
   '/about': typeof AboutRoute
   '/faq': typeof FaqRoute
+  '/feedback': typeof FeedbackRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/menu/add-menu': typeof MenuAddMenuRoute
@@ -158,17 +175,27 @@ export interface FileRouteTypes {
     | ''
     | '/about'
     | '/faq'
+    | '/feedback'
     | '/login'
     | '/signup'
     | '/menu/add-menu'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/about' | '/faq' | '/login' | '/signup' | '/menu/add-menu'
+  to:
+    | '/'
+    | ''
+    | '/about'
+    | '/faq'
+    | '/feedback'
+    | '/login'
+    | '/signup'
+    | '/menu/add-menu'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/about'
     | '/faq'
+    | '/feedback'
     | '/login'
     | '/signup'
     | '/menu/add-menu'
@@ -180,6 +207,7 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRoute
   AboutRoute: typeof AboutRoute
   FaqRoute: typeof FaqRoute
+  FeedbackRoute: typeof FeedbackRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
   MenuAddMenuRoute: typeof MenuAddMenuRoute
@@ -190,6 +218,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRoute,
   AboutRoute: AboutRoute,
   FaqRoute: FaqRoute,
+  FeedbackRoute: FeedbackRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
   MenuAddMenuRoute: MenuAddMenuRoute,
@@ -209,6 +238,7 @@ export const routeTree = rootRoute
         "/_authenticated",
         "/about",
         "/faq",
+        "/feedback",
         "/login",
         "/signup",
         "/menu/add-menu"
@@ -225,6 +255,9 @@ export const routeTree = rootRoute
     },
     "/faq": {
       "filePath": "faq.tsx"
+    },
+    "/feedback": {
+      "filePath": "feedback.tsx"
     },
     "/login": {
       "filePath": "login.tsx"

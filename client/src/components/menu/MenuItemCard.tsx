@@ -7,13 +7,14 @@ import { FaCircleInfo, FaPlus } from "react-icons/fa6";
  * MenuItemProps to enforce type safety.
  */
 type MenuItemProps = {
-  id: number; // ✅ Added this for purchase
+  id: number; // Added this for purchase
   name: string;
   price: number;
   category: string;
   nutritionalInfo?: string;
   dietaryRestriction?: string;
   imageUrl?: string;
+  onPurchaseSuccess: (newBalance: number) => void;
 };
 
 /**
@@ -28,6 +29,7 @@ const MenuItemCard: React.FC<MenuItemProps> = (props) => {
     dietaryRestriction,
     imageUrl,
     nutritionalInfo,
+    onPurchaseSuccess,
   } = props;
 
   const [isFlipped, setIsFlipped] = useState(false);
@@ -44,10 +46,22 @@ const MenuItemCard: React.FC<MenuItemProps> = (props) => {
       });
 
       setMessage("Purchase successful!");
+      onPurchaseSuccess(res.data.new_balance);
+
+      // NEW: Automatically clear the message after 2 seconds
+      setTimeout(() => {
+        setMessage(null);
+      }, 2000);
+
       console.log("Purchase success:", res.data);
     } catch (error: any) {
       console.error("Purchase error:", error);
       setMessage(error.response?.data?.error || "Purchase failed");
+
+      // Optional: Clear error messages after a bit too
+      setTimeout(() => {
+        setMessage(null);
+      }, 3000);
     }
   };
 

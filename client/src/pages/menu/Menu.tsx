@@ -274,6 +274,7 @@ const Menu = () => {
                   dietaryRestriction={item.dietary_restrictions}
                   imageUrl={item.image ? item.image : undefined}
                   nutritionalInfo={item.nutritional_info}
+                  onPurchaseSuccess={(newBalance) => setBalance(newBalance)}
                 />
               ))}
 

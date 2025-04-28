@@ -13,8 +13,6 @@ from django.http import JsonResponse
 def get_csrf_token(request):
     return JsonResponse({'message': 'CSRF cookie set'})
 
-
-
 class BalanceDetailView(generics.RetrieveAPIView):
     queryset = Balance.objects.all()
     serializer_class = BalanceSerializer

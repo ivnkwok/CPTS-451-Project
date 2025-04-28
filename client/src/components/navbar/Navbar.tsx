@@ -42,9 +42,9 @@ const Navbar = () => {
         <button className="icon-button" aria-label='Your cart button.' title='Your cart'>
           <FaBasketShopping size={20} />
         </button>
-        <button className="icon-button" aria-label='Profile button.' title='User profile'>
+        <Link to="/login" className="icon-button" aria-label="Login button." title="Login">
           <FaUser size={20} />
-        </button>
+        </Link>
       </div>
     </nav>
   )

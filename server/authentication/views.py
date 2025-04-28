@@ -3,6 +3,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
+from django.utils.decorators import method_decorator
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth.models import Group
+from django.contrib.auth.hashers import make_password
 import json
 
 @csrf_exempt
@@ -36,3 +42,50 @@ def user_view(request):
             "email": user.email,
         })
     return JsonResponse({"error": "Not authenticated"}, status=401)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class signup_view(APIView):
+    """
+    Handles user signup by creating a new User.
+    Accepts username, email, password, and role ('student', 'staff', or 'admin').
+    """
+    def post(self, request):
+        username = request.data.get('username')
+        email = request.data.get('email')
+        password = request.data.get('password')
+        role = request.data.get('role', 'student')  # default to student if not provided
+
+        if not username or not password:
+            return Response(
+                {"error": "Username and password are required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Create the user with a hashed password
+        try:
+            user = User.objects.create(
+                username=username,
+                email=email,
+                password=make_password(password)
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"Error creating user: {str(e)}"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Optional: Assign role using Django groups (ensure these groups exist or are created)
+        if role in ['admin', 'staff', 'student']:
+            group, created = Group.objects.get_or_create(name=role)
+            user.groups.add(group)
+        else:
+            return Response(
+                {"error": "Invalid role specified."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user.save()
+        return Response(
+            {"message": "User created successfully"},
+            status=status.HTTP_201_CREATED
+        )

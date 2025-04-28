@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SignupImport } from './routes/signup'
 import { Route as LoginImport } from './routes/login'
 import { Route as FaqImport } from './routes/faq'
 import { Route as AboutImport } from './routes/about'
@@ -19,6 +20,12 @@ import { Route as IndexImport } from './routes/index'
 import { Route as MenuAddMenuImport } from './routes/menu/add-menu'
 
 // Create/Update Routes
+
+const SignupRoute = SignupImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const LoginRoute = LoginImport.update({
   id: '/login',
@@ -94,6 +101,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupImport
+      parentRoute: typeof rootRoute
+    }
     '/menu/add-menu': {
       id: '/menu/add-menu'
       path: '/menu/add-menu'
@@ -112,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/menu/add-menu': typeof MenuAddMenuRoute
 }
 
@@ -121,6 +136,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/menu/add-menu': typeof MenuAddMenuRoute
 }
 
@@ -131,14 +147,22 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/menu/add-menu': typeof MenuAddMenuRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/about' | '/faq' | '/login' | '/menu/add-menu'
+  fullPaths:
+    | '/'
+    | ''
+    | '/about'
+    | '/faq'
+    | '/login'
+    | '/signup'
+    | '/menu/add-menu'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/about' | '/faq' | '/login' | '/menu/add-menu'
+  to: '/' | '' | '/about' | '/faq' | '/login' | '/signup' | '/menu/add-menu'
   id:
     | '__root__'
     | '/'
@@ -146,6 +170,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/faq'
     | '/login'
+    | '/signup'
     | '/menu/add-menu'
   fileRoutesById: FileRoutesById
 }
@@ -156,6 +181,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   FaqRoute: typeof FaqRoute
   LoginRoute: typeof LoginRoute
+  SignupRoute: typeof SignupRoute
   MenuAddMenuRoute: typeof MenuAddMenuRoute
 }
 
@@ -165,6 +191,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   FaqRoute: FaqRoute,
   LoginRoute: LoginRoute,
+  SignupRoute: SignupRoute,
   MenuAddMenuRoute: MenuAddMenuRoute,
 }
 
@@ -183,6 +210,7 @@ export const routeTree = rootRoute
         "/about",
         "/faq",
         "/login",
+        "/signup",
         "/menu/add-menu"
       ]
     },
@@ -200,6 +228,9 @@ export const routeTree = rootRoute
     },
     "/login": {
       "filePath": "login.tsx"
+    },
+    "/signup": {
+      "filePath": "signup.tsx"
     },
     "/menu/add-menu": {
       "filePath": "menu/add-menu.tsx"

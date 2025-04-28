@@ -8,5 +8,7 @@ class MenuItem(models.Model):
     dietary_restrictions = models.CharField(max_length=200, blank=True)
     image = models.ImageField(upload_to='menu_images/', blank=True, null=True)
 
+    times_bought = models.PositiveIntegerField(default=0)
+    
     def __str__(self):
         return self.name

@@ -47,6 +47,7 @@ const AddMenuItemForm = () => {
     image: null,
   });
 
+  const categoryOptions = ["Appetizers", "Soups & Salads", "Entrees", "Sides", "Desserts", "Beverages"];
   const dietaryOptions = ["None", "Vegan", "Vegetarian", "Halal", "Kosher", "Gluten-Free"];
 
   /**
@@ -153,6 +154,17 @@ const AddMenuItemForm = () => {
         onChange={handleChange}
         required
       />
+      <select
+        name="category"
+        value={formData.category}
+        onChange={handleChange}
+      >
+        {categoryOptions.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
 
       {/* New nutritional info fields */}
       <input

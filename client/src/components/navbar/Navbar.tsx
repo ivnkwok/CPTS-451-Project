@@ -1,6 +1,7 @@
 import './Navbar.css'
 import { Link } from '@tanstack/react-router'
 import { FaBasketShopping, FaUser, FaMagnifyingGlass } from 'react-icons/fa6'
+import { useAuth } from '../../context/AuthContext'
 
 /**
  * Navbar component for the Dining Hall Management System.
@@ -9,6 +10,12 @@ import { FaBasketShopping, FaUser, FaMagnifyingGlass } from 'react-icons/fa6'
  * @returns {JSX.Element} A navigation bar with links and action buttons.
  */
 const Navbar = () => {
+  const { user, logout } = useAuth()
+
+  const handleLogout = async () => {
+    await logout()
+  }
+
   return (
     <nav className="navbar">
       <div className="navbar-left">
@@ -42,9 +49,18 @@ const Navbar = () => {
         <button className="icon-button" aria-label='Your cart button.' title='Your cart'>
           <FaBasketShopping size={20} />
         </button>
-        <button className="icon-button" aria-label='Profile button.' title='User profile'>
-          <FaUser size={20} />
-        </button>
+        {user
+          ? (
+            <button onClick={handleLogout} className="icon-button" style={{fontSize: 20}} title="Logout">
+              Logout
+            </button>
+          )
+          : (
+            <Link to="/login" className="icon-button" title="Login">
+              <FaUser size={20} />
+            </Link>
+          )
+        }
       </div>
     </nav>
   )

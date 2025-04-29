@@ -21,12 +21,12 @@ RUN python3 -m venv /venv && \
 ENV VIRTUAL_ENV=/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-ENV PYTHONPATH=/code/backend
+ENV PYTHONPATH=/app/server
 ENV DJANGO_SETTINGS_MODULE=backend.settings
 
 # Set working directory
-WORKDIR /code/backend
-RUN chown devcontainer:devcontainer /code
+WORKDIR /app/server
+RUN chown devcontainer:devcontainer /app/server
 
 # Install Python dependencies
 COPY requirements.txt .

@@ -24,6 +24,7 @@ urlpatterns = [
     path('menu/', include('menu.urls')),
     path('users/', include('users.urls')),
     path('auth/', include('authentication.urls')),
+    path('feedback/', include('feedback.urls')),
 ]
 
 # Allows us to serve images in development

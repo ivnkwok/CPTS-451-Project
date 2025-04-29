@@ -22,7 +22,7 @@ type MenuItemProps = {
  */
 const MenuItemCard: React.FC<MenuItemProps> = (props) => {
   const {
-    id, // Destructure id for purchasing
+    id,
     name,
     price,
     category,

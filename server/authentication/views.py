@@ -76,8 +76,13 @@ class signup_view(APIView):
             )
 
         if role in ['admin', 'staff', 'student']:
-            group, created = Group.objects.get_or_create(name=role)
+            group, _ = Group.objects.get_or_create(name=role)
             user.groups.add(group)
+            if role == 'staff':
+                user.is_staff = True
+            elif role == 'admin':
+                user.is_staff = True
+                user.is_superuser = True
         else:
             return Response(
                 {"error": "Invalid role specified."},

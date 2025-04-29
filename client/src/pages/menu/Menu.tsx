@@ -6,6 +6,8 @@ import { FaFilter, FaXmark } from "react-icons/fa6";
 import BalanceDisplay from "../../components/balance/BalanceDisplay";
 import TopUpForm from "../../components/balance/TopUpForm";
 import { useAuth } from "../../context/AuthContext";
+import { useBalance } from "../../components/balance/BalanceContext";
+import LowBalanceNotification from "../../components/balance/LowBalanceNotification";
 
 /**
   * Represents the structure of a menu item and enforces type safety.
@@ -45,6 +47,7 @@ const Menu = () => {
   const [dietary, setDietary] = useState<string>("");
   const { user, isLoading } = useAuth();
   const [balance, setBalance] = useState<number | null>(null);
+  const { isLowBalance } = useBalance()
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -106,6 +109,7 @@ const Menu = () => {
 
   return (
     <div className={styles["wrapper"]}>
+      {isLowBalance && <LowBalanceNotification />}
       <div className={styles["two-column-layout"]}>
         {/* LEFT COLUMN (Sidebar) */}
         <div className={styles["menu-left"]}>

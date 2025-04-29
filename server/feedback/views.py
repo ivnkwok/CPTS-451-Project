@@ -5,30 +5,49 @@ from .permissions import IsStaffOrAdmin
 from rest_framework.response import Response
 from django.utils import timezone
 
+class FeedbackDetailView(generics.RetrieveDestroyAPIView):
+    """
+    GET:  (optional) retrieve a single feedback item
+    DELETE: only staff/admin can delete
+    """
+    queryset = Feedback.objects.all()
+    serializer_class = FeedbackSerializer
+    permission_classes = [permissions.IsAuthenticated, IsStaffOrAdmin]
+
+    def perform_destroy(self, instance):
+        instance.delete()
+
 class FeedbackListCreateView(generics.ListCreateAPIView):
-    queryset         = Feedback.objects.all().order_by('-created_at')
+    """
+    GET: Authenticated students see only their own feedback; 
+         staff/admin see all.
+    POST: Anyone can submit feedback.
+    """
     serializer_class = FeedbackSerializer
 
     def get_permissions(self):
         if self.request.method == 'GET':
-            # Only staff/admin can see all feedback
-            return [permissions.IsAuthenticated(), IsStaffOrAdmin()]
-        # Anyone (even anonymous) can POST
+            return [permissions.IsAuthenticated()]
+        # Anyone can create
         return [permissions.AllowAny()]
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated and (user.is_staff or user.groups.filter(name='admin').exists()):
+            return Feedback.objects.all().order_by('-created_at')
+        return Feedback.objects.filter(user=user).order_by('-created_at')
+
     def perform_create(self, serializer):
-        # Attach user if logged in, else leave “Anonymous”
-        user = self.request.user if getattr(self.request, 'user', None) and self.request.user.is_authenticated else None
-        serializer.save(user=user)
+        serializer.save(user=self.request.user if self.request.user.is_authenticated else None)
 
 class FeedbackReplyView(generics.UpdateAPIView):
     """
-    (Optional) allow staff to post a response.
+    PATCH: Only staff/admin can add a response.
     """
     queryset         = Feedback.objects.all()
     serializer_class = FeedbackSerializer
     permission_classes = [permissions.IsAuthenticated, IsStaffOrAdmin]
-    
+
     def patch(self, request, *args, **kwargs):
         fb = self.get_object()
         fb.response     = request.data.get('response', fb.response)

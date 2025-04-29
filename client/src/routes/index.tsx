@@ -1,12 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Menu from "../pages/menu/Menu";
-import BalanceDisplay from "../components/balance/BalanceDisplay";
-import TopUpForm from "../components/balance/TopUpForm";
+import { BalanceProvider } from "../components/balance/BalanceContext";
 
 const MenuPage = () => {
   return (
     <div>
-      <Menu />
+      <BalanceProvider>
+        <Menu />
+      </BalanceProvider>
     </div>
   );
 };

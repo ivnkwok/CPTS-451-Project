@@ -1,14 +1,6 @@
-# server/users/views.py
-
 from rest_framework import generics, permissions
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework import status
-from .models import MenuItem 
-from menu.models import MenuItem as MenuItemModel  # (You'll need this if your MenuItem is actually from menu app)
+from .models import MenuItem
 from .serializers import MenuItemSerializer
-from users.models import Balance  # (Adjust if Balance is stored somewhere else)
 
 class MenuItemCreateView(generics.CreateAPIView):
     queryset = MenuItem.objects.all()
@@ -52,33 +44,3 @@ class MenuItemListView(generics.ListAPIView):
 
         return queryset
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def purchase_item(request):
-    try:
-        item_id = request.data.get('itemId')
-        if not item_id:
-            return Response({'error': 'Item ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        item = MenuItemModel.objects.get(id=item_id)
-        balance = Balance.objects.get(user=request.user)
-
-        if balance.amount < item.price:
-            return Response({'error': 'Insufficient balance.'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        # Subtract price and save
-        balance.amount -= item.price
-        balance.save()
-
-        # Increment item's times_bought
-        item.times_bought += 1
-        item.save()
-
-        return Response({'message': 'Purchase successful', 'new_balance': balance.amount}, status=status.HTTP_200_OK)
-
-    except MenuItemModel.DoesNotExist:
-        return Response({'error': 'Item not found.'}, status=status.HTTP_404_NOT_FOUND)
-    except Balance.DoesNotExist:
-        return Response({'error': 'Balance not found.'}, status=status.HTTP_404_NOT_FOUND)
-    except Exception as e:
-        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -48,7 +48,6 @@ const MenuItemCard: React.FC<MenuItemProps> = (props) => {
       setMessage("Purchase successful!");
       onPurchaseSuccess(res.data.new_balance);
 
-      // NEW: Automatically clear the message after 2 seconds
       setTimeout(() => {
         setMessage(null);
       }, 2000);
@@ -58,7 +57,6 @@ const MenuItemCard: React.FC<MenuItemProps> = (props) => {
       console.error("Purchase error:", error);
       setMessage(error.response?.data?.error || "Purchase failed");
 
-      // Optional: Clear error messages after a bit too
       setTimeout(() => {
         setMessage(null);
       }, 3000);

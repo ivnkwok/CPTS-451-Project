@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import MenuItemCreateView, MenuItemListView, purchase_item
 from .views import BalanceDetailView, BalanceTopUpView, get_csrf_token
+from .views import purchase_item
 
 urlpatterns = [
     path('balance/', BalanceDetailView.as_view(), name='user-balance'),

@@ -43,3 +43,4 @@ class MenuItemListView(generics.ListAPIView):
             queryset = queryset.filter(dietary_restrictions__icontains=dietary)
 
         return queryset
+

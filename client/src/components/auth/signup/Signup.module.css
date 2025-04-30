@@ -1,0 +1,69 @@
+.container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--size-400);
+}
+
+.card {
+    box-shadow: none;
+    padding: var(--size-600);
+    border-radius: var(--size-200);
+    width: 100%;
+    max-width: 420px;
+}
+
+.title {
+    font-size: var(--fs-300);
+    margin-bottom: var(--size-500);
+    text-align: center;
+}
+
+.formGroup {
+    margin-bottom: var(--size-400);
+}
+
+.input,
+.select {
+    width: 100%;
+    padding: var(--size-400);
+    font-size: var(--fs-200);
+    border: 1px solid #ddd;
+    border-radius: var(--size-200);
+}
+
+.select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-position: right var(--size-300) center;
+    background-repeat: no-repeat;
+}
+
+.button {
+    width: 100%;
+    padding: var(--size-400);
+    margin-top: var(--size-400);
+    font-size: var(--fs-200);
+    border-radius: var(--size-200);
+}
+
+.error {
+    color: var(--clr-primary-error);
+    margin-bottom: var(--size-400);
+    text-align: center;
+    font-size: var(--fs-100);
+}
+
+.footer {
+    margin-top: var(--size-500);
+    text-align: center;
+    font-size: var(--fs-100);
+}
+
+.link {
+    color: var(--clr-primary-300);
+    text-decoration: none;
+    font-weight: var(--fw-regular);
+}

@@ -1,17 +1,13 @@
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router'
 import Navbar from '../components/navbar/Navbar'
-import { useBalance, BalanceProvider } from '../components/balance/BalanceContext';
-import LowBalanceNotification from '../components/balance/LowBalanceNotification';
 import { AuthProvider } from '../context/AuthContext';
 
 
 function RootLayout() {
-  const { isLowBalance } = useBalance()
   return (<>
     <div style={{ display: 'flex', flexDirection: 'column', height: '100svh' }}>
       <AuthProvider>
         <Navbar />
-        {isLowBalance && <LowBalanceNotification />}
         <div style={{ flex: 1, minHeight: 0, display: 'flex' }}>
           <Outlet />
         </div>
@@ -38,9 +34,5 @@ function RootLayout() {
 }
 
 export const Route = createRootRoute({
-  component: () => (
-    <BalanceProvider>
-      <RootLayout />
-    </BalanceProvider>
-  ),
+  component: RootLayout
 })

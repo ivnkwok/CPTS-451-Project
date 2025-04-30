@@ -6,19 +6,21 @@ import { FaFilter, FaXmark } from "react-icons/fa6";
 import BalanceDisplay from "../../components/balance/BalanceDisplay";
 import TopUpForm from "../../components/balance/TopUpForm";
 import { useAuth } from "../../context/AuthContext";
+import { useBalance } from "../../components/balance/BalanceContext";
+import LowBalanceNotification from "../../components/balance/LowBalanceNotification";
 
 /**
- * Represents the structure of a menu item and enforces type safety.
- *
- * @typedef {Object} MenuItem
- * @property {number} id - Unique identifier of the menu item.
- * @property {string} name - Name of the menu item.
- * @property {number} price - Price of the menu item.
- * @property {string} category - Category of the menu item.
- * @property {string} [nutritional_info] - Nutritional information (optional).
- * @property {string} [dietary_restrictions] - Dietary restriction (optional).
- * @property {string} [image] - URL path to the menu item's image (optional).
- */
+  * Represents the structure of a menu item and enforces type safety.
+  * 
+  * @typedef {Object} MenuItem
+  * @property {number} id - Unique identifier of the menu item.
+  * @property {string} name - Name of the menu item.
+  * @property {number} price - Price of the menu item.
+  * @property {string} category - Category of the menu item.
+  * @property {string} [nutritional_info] - Nutritional information (optional).
+  * @property {string} [dietary_restrictions] - Dietary restriction (optional).
+  * @property {string} [image] - URL path to the menu item's image (optional).
+*/
 type MenuItem = {
   id: number;
   name: string;
@@ -45,6 +47,7 @@ const Menu = () => {
   const [dietary, setDietary] = useState<string>("");
   const { user, isLoading } = useAuth();
   const [balance, setBalance] = useState<number | null>(null);
+  const { isLowBalance } = useBalance()
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -80,7 +83,7 @@ const Menu = () => {
       console.error("Error fetching menu items:", error);
     }
   };
-
+  
   /**
    * Updates the selected category.
    *
@@ -106,6 +109,7 @@ const Menu = () => {
 
   return (
     <div className={styles["wrapper"]}>
+      {isLowBalance && <LowBalanceNotification />}
       <div className={styles["two-column-layout"]}>
         {/* LEFT COLUMN (Sidebar) */}
         <div className={styles["menu-left"]}>
@@ -193,15 +197,7 @@ const Menu = () => {
             {/* Filter panel */}
             {showFilterPanel && (
               <div className={styles["filter-panel"]}>
-                <h3
-                  style={{
-                    paddingBottom: "1rem",
-                    fontSize: "1.5rem",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Filter Options
-                </h3>
+                <h3 style={{ paddingBottom: '1rem', fontSize: '1.5rem', fontWeight: 'bold' }}>Filter Options</h3>
                 <div className={styles["filter-row"]}>
                   <div className={styles["filter-group"]}>
                     <label
@@ -267,14 +263,12 @@ const Menu = () => {
               {menuItems.map((item) => (
                 <MenuItemCard
                   key={item.id}
-                  id={item.id}
                   name={item.name}
                   price={item.price}
                   category={item.category}
                   dietaryRestriction={item.dietary_restrictions}
                   imageUrl={item.image ? item.image : undefined}
                   nutritionalInfo={item.nutritional_info}
-                  onPurchaseSuccess={(newBalance) => setBalance(newBalance)}
                 />
               ))}
 

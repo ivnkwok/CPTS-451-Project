@@ -1,6 +1,5 @@
 # server/users/views.py
-
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,7 +7,8 @@ from .models import Balance
 from .serializers import BalanceSerializer
 from django.http import Http404, JsonResponse
 from decimal import Decimal
-from django.views.decorators.csrf import ensure_csrf_cookie
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from menu.models import MenuItem as MenuItemModel
@@ -80,3 +80,34 @@ def purchase_item(request):
         return Response({'error': 'Balance not found.'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@permission_classes([IsAuthenticated])
+def list_users_view(request):
+    if request.method == "GET":
+        users = User.objects.all()
+        user_list = []
+        for user in users:
+            user_list.append({
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "is_staff": user.is_staff,
+                "is_superuser": user.is_superuser,
+                "groups": list(user.groups.values_list('name', flat=True)),
+            })
+        return JsonResponse({"users":user_list})
+    else:
+        return JsonResponse({"error":"Method not allowed"}, status=405)
+
+@csrf_exempt
+def delete_user_view(request, id):
+    if request.method == "DELETE":
+        try:
+            user_to_delete = get_object_or_404(User, pk=id)
+            if user_to_delete == request.user:
+                return JsonResponse({"error": "You cannot delete your own account."}, status=403);
+            user_to_delete.delete();
+            return JsonResponse({"message": f"User {id} deleted successfully."})
+        except Exception as e:
+            return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=403)

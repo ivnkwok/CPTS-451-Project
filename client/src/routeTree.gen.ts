@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as UsermanagementImport } from './routes/usermanagement'
 import { Route as SignupImport } from './routes/signup'
 import { Route as LoginImport } from './routes/login'
 import { Route as FeedbackImport } from './routes/feedback'
@@ -21,6 +22,12 @@ import { Route as IndexImport } from './routes/index'
 import { Route as MenuAddMenuImport } from './routes/menu/add-menu'
 
 // Create/Update Routes
+
+const UsermanagementRoute = UsermanagementImport.update({
+  id: '/usermanagement',
+  path: '/usermanagement',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const SignupRoute = SignupImport.update({
   id: '/signup',
@@ -122,6 +129,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupImport
       parentRoute: typeof rootRoute
     }
+    '/usermanagement': {
+      id: '/usermanagement'
+      path: '/usermanagement'
+      fullPath: '/usermanagement'
+      preLoaderRoute: typeof UsermanagementImport
+      parentRoute: typeof rootRoute
+    }
     '/menu/add-menu': {
       id: '/menu/add-menu'
       path: '/menu/add-menu'
@@ -142,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/feedback': typeof FeedbackRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/usermanagement': typeof UsermanagementRoute
   '/menu/add-menu': typeof MenuAddMenuRoute
 }
 
@@ -153,6 +168,7 @@ export interface FileRoutesByTo {
   '/feedback': typeof FeedbackRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/usermanagement': typeof UsermanagementRoute
   '/menu/add-menu': typeof MenuAddMenuRoute
 }
 
@@ -165,6 +181,7 @@ export interface FileRoutesById {
   '/feedback': typeof FeedbackRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/usermanagement': typeof UsermanagementRoute
   '/menu/add-menu': typeof MenuAddMenuRoute
 }
 
@@ -178,6 +195,7 @@ export interface FileRouteTypes {
     | '/feedback'
     | '/login'
     | '/signup'
+    | '/usermanagement'
     | '/menu/add-menu'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -188,6 +206,7 @@ export interface FileRouteTypes {
     | '/feedback'
     | '/login'
     | '/signup'
+    | '/usermanagement'
     | '/menu/add-menu'
   id:
     | '__root__'
@@ -198,6 +217,7 @@ export interface FileRouteTypes {
     | '/feedback'
     | '/login'
     | '/signup'
+    | '/usermanagement'
     | '/menu/add-menu'
   fileRoutesById: FileRoutesById
 }
@@ -210,6 +230,7 @@ export interface RootRouteChildren {
   FeedbackRoute: typeof FeedbackRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
+  UsermanagementRoute: typeof UsermanagementRoute
   MenuAddMenuRoute: typeof MenuAddMenuRoute
 }
 
@@ -221,6 +242,7 @@ const rootRouteChildren: RootRouteChildren = {
   FeedbackRoute: FeedbackRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
+  UsermanagementRoute: UsermanagementRoute,
   MenuAddMenuRoute: MenuAddMenuRoute,
 }
 
@@ -241,6 +263,7 @@ export const routeTree = rootRoute
         "/feedback",
         "/login",
         "/signup",
+        "/usermanagement",
         "/menu/add-menu"
       ]
     },
@@ -264,6 +287,9 @@ export const routeTree = rootRoute
     },
     "/signup": {
       "filePath": "signup.tsx"
+    },
+    "/usermanagement": {
+      "filePath": "usermanagement.tsx"
     },
     "/menu/add-menu": {
       "filePath": "menu/add-menu.tsx"

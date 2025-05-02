@@ -2,6 +2,12 @@ from rest_framework import generics, permissions
 from .models import MenuItem
 from .serializers import MenuItemSerializer
 
+# NEW IMPORTS for the public stats view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from users.models import Balance  # from users app
+
 class MenuItemCreateView(generics.CreateAPIView):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
@@ -44,3 +50,17 @@ class MenuItemListView(generics.ListAPIView):
 
         return queryset
 
+# === NEW PUBLIC STATS VIEW ===
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def public_stats_view(request):
+    # Get all user balances
+    balances = Balance.objects.select_related('user').values('user__username', 'amount')
+
+    # Get all menu items and their times bought
+    items = MenuItem.objects.values('name', 'times_bought')
+
+    return Response({
+        "balances": list(balances),
+        "items": list(items)
+    })

@@ -40,7 +40,7 @@ const MenuItemCard: React.FC<MenuItemProps> = (props) => {
   };
 
   const handlePurchase = async () => {
-    console.log("🚀 Attempting purchase for item:", id);
+    console.log(" Attempting purchase for item:", id);
 
     try {
       const res = await axios.post(
@@ -60,9 +60,9 @@ const MenuItemCard: React.FC<MenuItemProps> = (props) => {
         setMessage(null);
       }, 2000);
 
-      console.log("✅ Purchase success:", res.data);
+      console.log("Purchase success:", res.data);
     } catch (error: any) {
-      console.error("❌ Purchase error:", error);
+      console.error("Purchase error:", error);
       setMessage(error.response?.data?.error || "Purchase failed");
 
       setTimeout(() => {

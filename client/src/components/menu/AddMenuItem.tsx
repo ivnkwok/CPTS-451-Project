@@ -16,6 +16,11 @@ const AddMenuItemForm = () => {
    * @property {string} price - The price of the menu item (stored as a string to match input fields).
    * @property {string} category - The category the menu item belongs to.
    * @property {string} nutritional_info - Nutritional information of the menu item.
+   * @property {string} nutritionalCalories
+   * @property {string} nutritionalProtein
+   * @property {string} nutritionalCarbs
+   * @property {string} nutritionalFats
+   * @property {string} nutritionalAllergens
    * @property {string} dietary_restrictions - Dietary restriction tag (e.g., Vegan, Halal).
    * @property {File | null} image - The image file for the menu item (optional).
   */
@@ -147,18 +152,13 @@ const AddMenuItemForm = () => {
         onChange={handleChange}
         required
       />
-      <input
-        name="category"
-        placeholder="Category"
-        value={formData.category}
-        onChange={handleChange}
-        required
-      />
       <select
         name="category"
         value={formData.category}
         onChange={handleChange}
+        required
       >
+        <option value="" disabled>Select category</option>
         {categoryOptions.map((option) => (
           <option key={option} value={option}>
             {option}

@@ -116,6 +116,11 @@ const MenuItemCard: React.FC<MenuItemProps> = (props) => {
                 ${Number(price).toFixed(2)}
               </p>
             </div>
+            <input 
+              name="notes"
+              placeholder="Enter special instructions..."
+              />
+            {/* Show success or error message */}
             {message && <p>{message}</p>}
           </div>
         </>

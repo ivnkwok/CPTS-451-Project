@@ -18,8 +18,8 @@ import { Route as FaqImport } from './routes/faq'
 import { Route as AboutImport } from './routes/about'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
-import { Route as MenuUpdateMenuImport } from './routes/menu/update-menu'
 import { Route as StatsIndexImport } from './routes/stats/index'
+import { Route as MenuUpdateMenuImport } from './routes/menu/update-menu'
 import { Route as MenuAddMenuImport } from './routes/menu/add-menu'
 
 // Create/Update Routes
@@ -65,15 +65,15 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const MenuUpdateMenuRoute = MenuUpdateMenuImport.update({
-  id: '/menu/update-menu',
-  path: '/menu/update-menu',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const StatsIndexRoute = StatsIndexImport.update({
   id: '/stats/',
   path: '/stats/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const MenuUpdateMenuRoute = MenuUpdateMenuImport.update({
+  id: '/menu/update-menu',
+  path: '/menu/update-menu',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -286,7 +286,7 @@ export const routeTree = rootRoute
         "/login",
         "/signup",
         "/menu/add-menu",
-        "/menu/update-menu"
+        "/menu/update-menu",
         "/stats/"
       ]
     },
@@ -316,6 +316,7 @@ export const routeTree = rootRoute
     },
     "/menu/update-menu": {
       "filePath": "menu/update-menu.tsx"
+    },
     "/stats/": {
       "filePath": "stats/index.tsx"
     }

@@ -18,6 +18,7 @@ import { Route as FaqImport } from './routes/faq'
 import { Route as AboutImport } from './routes/about'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
+import { Route as StatsIndexImport } from './routes/stats/index'
 import { Route as MenuAddMenuImport } from './routes/menu/add-menu'
 
 // Create/Update Routes
@@ -60,6 +61,12 @@ const AuthenticatedRoute = AuthenticatedImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const StatsIndexRoute = StatsIndexImport.update({
+  id: '/stats/',
+  path: '/stats/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -129,6 +136,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MenuAddMenuImport
       parentRoute: typeof rootRoute
     }
+    '/stats/': {
+      id: '/stats/'
+      path: '/stats'
+      fullPath: '/stats'
+      preLoaderRoute: typeof StatsIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -143,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/menu/add-menu': typeof MenuAddMenuRoute
+  '/stats': typeof StatsIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -154,6 +169,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/menu/add-menu': typeof MenuAddMenuRoute
+  '/stats': typeof StatsIndexRoute
 }
 
 export interface FileRoutesById {
@@ -166,6 +182,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/menu/add-menu': typeof MenuAddMenuRoute
+  '/stats/': typeof StatsIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -179,6 +196,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/menu/add-menu'
+    | '/stats'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -189,6 +207,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/menu/add-menu'
+    | '/stats'
   id:
     | '__root__'
     | '/'
@@ -199,6 +218,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/menu/add-menu'
+    | '/stats/'
   fileRoutesById: FileRoutesById
 }
 
@@ -211,6 +231,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
   MenuAddMenuRoute: typeof MenuAddMenuRoute
+  StatsIndexRoute: typeof StatsIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -222,6 +243,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
   MenuAddMenuRoute: MenuAddMenuRoute,
+  StatsIndexRoute: StatsIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -241,7 +263,8 @@ export const routeTree = rootRoute
         "/feedback",
         "/login",
         "/signup",
-        "/menu/add-menu"
+        "/menu/add-menu",
+        "/stats/"
       ]
     },
     "/": {
@@ -267,6 +290,9 @@ export const routeTree = rootRoute
     },
     "/menu/add-menu": {
       "filePath": "menu/add-menu.tsx"
+    },
+    "/stats/": {
+      "filePath": "stats/index.tsx"
     }
   }
 }

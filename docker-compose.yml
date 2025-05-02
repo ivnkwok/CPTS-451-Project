@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=dining_hall
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+
+  server:
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    volumes:
+      - ./server:/app/server
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=django-insecure-wp3xi&=3^$5y4cu@8@!_glg)!qfrnk+c)bp@8+h!kha$2i+)%k
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1] server client
+      - CORS_ALLOWED_ORIGINS=http://localhost:5173
+      - POSTGRES_DB=dining_hall
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=db
+    entrypoint: ["/app/server/entrypoint.sh"]
+    depends_on:
+      - db
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    volumes:
+      - ./client:/app/client
+      - /app/client/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://server:8000/api
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - server
+
+volumes:
+  postgres_data: 

@@ -27,7 +27,12 @@ SECRET_KEY = 'django-insecure-wp3xi&=3^$5y4cu@8@!_glg)!qfrnk+c)bp@8+h!kha$2i+)%k
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    os.environ.get('ALLOWED_HOSTS', 'localhost')
+    'localhost',
+    '127.0.0.1',
+    'server',
+    'server:8000',
+    'client',
+    '[::1]'
 ]
 
 

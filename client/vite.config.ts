@@ -8,4 +8,18 @@ export default defineConfig({
     TanStackRouterVite({ target: 'react', autoCodeSplitting: true }),
     react()
   ],
+  css: {
+    postcss: './postcss.config.cjs'
+  },
+  server: {
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://server:8000',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path
+      }
+    }
+  }
 })

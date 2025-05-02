@@ -1,15 +1,16 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import Navbar from '../components/navbar/Navbar'
+import { AuthProvider } from '../context/AuthContext'
 
 export const Route = createRootRoute({
   component: () => (
-    <>
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100svh' }}>
+    <AuthProvider>
+      <div className="min-h-screen bg-gray-100">
         <Navbar />
-        <div style={{ flex: 1, minHeight: 0, display: 'flex' }}>
+        <main className="container mx-auto px-4 py-8">
           <Outlet />
-        </div>
+        </main>
       </div>
-    </>
+    </AuthProvider>
   ),
 })

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "../../utils/axios"; // Added this
+import axios from "../../utils/axios"; // Custom Axios instance
 import styles from "../../pages/menu/Menu.module.css";
 import { FaCircleInfo, FaPlus } from "react-icons/fa6";
 
@@ -7,7 +7,7 @@ import { FaCircleInfo, FaPlus } from "react-icons/fa6";
  * MenuItemProps to enforce type safety.
  */
 type MenuItemProps = {
-  id: number; // Added this for purchase
+  id: number; // For purchase
   name: string;
   price: number;
   category: string;
@@ -40,10 +40,18 @@ const MenuItemCard: React.FC<MenuItemProps> = (props) => {
   };
 
   const handlePurchase = async () => {
+    console.log(" Attempting purchase for item:", id);
+
     try {
-      const res = await axios.post("/users/menu/purchase/", {
-        itemId: id,
-      });
+      const res = await axios.post(
+        "/users/menu/purchase/",
+        { item_id: id },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       setMessage("Purchase successful!");
       onPurchaseSuccess(res.data.new_balance);
@@ -100,7 +108,7 @@ const MenuItemCard: React.FC<MenuItemProps> = (props) => {
             <div className={styles["grid"]}>
               <button
                 className={styles["menu-item-add-button"]}
-                onClick={handlePurchase} // Now buys instead of "Add to cart"
+                onClick={handlePurchase}
               >
                 <FaPlus /> Buy
               </button>
@@ -108,7 +116,10 @@ const MenuItemCard: React.FC<MenuItemProps> = (props) => {
                 ${Number(price).toFixed(2)}
               </p>
             </div>
-
+            <input 
+              name="notes"
+              placeholder="Enter special instructions..."
+              />
             {/* Show success or error message */}
             {message && <p>{message}</p>}
           </div>

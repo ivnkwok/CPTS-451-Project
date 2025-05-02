@@ -3,12 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
+"scripts": {
+  "dev": "vite",
+  "build": "tsc -b && vite build",
+  "lint": "eslint .",
+  "preview": "vite preview"
+},
   "dependencies": {
     "@tanstack/react-router": "^1.114.25",
     "axios": "^1.8.4",
@@ -21,6 +21,7 @@
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "@tanstack/react-router-devtools": "^1.114.25",
+    "@tanstack/router-cli": "^1.119.0",
     "@tanstack/router-plugin": "^1.114.25",
     "@types/js-cookie": "^3.0.6",
     "@types/react": "^19.0.10",

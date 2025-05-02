@@ -12,6 +12,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from menu.models import MenuItem as MenuItemModel
+from django.views.decorators.csrf import csrf_exempt 
 
 @ensure_csrf_cookie
 def get_csrf_token(request):
@@ -50,11 +51,13 @@ class BalanceTopUpView(APIView):
         except (TypeError, ValueError):
             return Response({"error": "Invalid amount"}, status=status.HTTP_400_BAD_REQUEST)
 
+@csrf_exempt
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def purchase_item(request):
+    print("RAW request.data:", request.data)
     try:
-        item_id = request.data.get('itemId')
+        item_id = request.data.get('item_id')
         if not item_id:
             return Response({'error': 'Item ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
         

@@ -9,8 +9,7 @@ import AddMenuItemForm from "../../components/menu/AddMenuItem.tsx";
 */
 export default function AddMenuPage() {
   return (
-    <div>
-      <h1>Add a New Menu Item</h1>
+    <div style={{width: '100%'}}>
       <AddMenuItemForm />
     </div>
   );

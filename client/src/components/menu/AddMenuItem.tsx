@@ -1,15 +1,25 @@
 import React, { useState } from "react";
 import axios, { AxiosError } from "axios";
+import styles from "./AddMenuItem.module.css";
+
+const categoryOptions = [
+  "Appetizers",
+  "Soups & Salads",
+  "Entrees",
+  "Sides",
+  "Desserts",
+  "Beverages",
+];
+const dietaryOptions = [
+  "None",
+  "Vegan",
+  "Vegetarian",
+  "Halal",
+  "Kosher",
+  "Gluten-Free",
+];
 
 /**
- * A form component to add a new menu item.
- * Users can input item details, including name, price, category, nutritional information, and an image.
- *
- * @component
- * @returns {JSX.Element} A form for adding a menu item.
-*/
-const AddMenuItemForm = () => {
-  /**
    * Type definition for the form data state.
    * @typedef {Object} MenuItemForm
    * @property {string} name - The name of the menu item.
@@ -24,20 +34,28 @@ const AddMenuItemForm = () => {
    * @property {string} dietary_restrictions - Dietary restriction tag (e.g., Vegan, Halal).
    * @property {File | null} image - The image file for the menu item (optional).
   */
-  type MenuItemForm = {
-    name: string;
-    price: string;
-    category: string;
-    nutritional_info: string;
-    nutritionalCalories: string;
-    nutritionalProtein: string;
-    nutritionalCarbs: string;
-    nutritionalFats: string;
-    nutritionalAllergens: string;
-    dietary_restrictions: string;
-    image: File | null;
-  };
+type MenuItemForm = {
+  name: string;
+  price: string;
+  category: string;
+  nutritional_info: string;
+  nutritionalCalories: string;
+  nutritionalProtein: string;
+  nutritionalCarbs: string;
+  nutritionalFats: string;
+  nutritionalAllergens: string;
+  dietary_restrictions: string;
+  image: File | null;
+};
 
+/**
+ * A form component to add a new menu item.
+ * Users can input item details, including name, price, category, nutritional information, and an image.
+ *
+ * @component
+ * @returns {JSX.Element} A form for adding a menu item.
+*/
+const AddMenuItemForm: React.FC = () => {
   const [formData, setFormData] = useState<MenuItemForm>({
     name: "",
     price: "",
@@ -51,9 +69,7 @@ const AddMenuItemForm = () => {
     dietary_restrictions: "",
     image: null,
   });
-
-  const categoryOptions = ["Appetizers", "Soups & Salads", "Entrees", "Sides", "Desserts", "Beverages"];
-  const dietaryOptions = ["None", "Vegan", "Vegetarian", "Halal", "Kosher", "Gluten-Free"];
+  const [error, setError] = useState("");
 
   /**
    * Handles input field changes and updates state.
@@ -64,10 +80,7 @@ const AddMenuItemForm = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   /**
@@ -76,10 +89,7 @@ const AddMenuItemForm = () => {
    * @param {React.ChangeEvent<HTMLInputElement>} e - The file input change event.
   */
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      image: e.target.files?.[0] || null,
-    }));
+    setFormData((prev) => ({ ...prev, image: e.target.files?.[0] || null }));
   };
 
   /**
@@ -91,135 +101,162 @@ const AddMenuItemForm = () => {
   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+    setError("");
+
     // Combine nutritional data into one string
-    const { nutritionalCalories, nutritionalProtein, nutritionalCarbs, nutritionalFats, nutritionalAllergens } = formData;
-    const combinedNutritionalInfo = `${nutritionalCalories}, ${nutritionalProtein}, ${nutritionalCarbs}, ${nutritionalFats}, ${nutritionalAllergens}`;
-    
+    const {
+      nutritionalCalories,
+      nutritionalProtein,
+      nutritionalCarbs,
+      nutritionalFats,
+      nutritionalAllergens,
+    } = formData;
+    const combinedNutritional = `${nutritionalCalories} kcal, ${nutritionalProtein}g protein, ${nutritionalCarbs}g carbs, ${nutritionalFats}g fats, allergens: ${nutritionalAllergens}`;
+
     // Create a new object with the combined nutritional_info
-    const newFormData = {
-      ...formData,
-      nutritional_info: combinedNutritionalInfo,
-    };
-  
-    const data = new FormData();
-    Object.entries(newFormData).forEach(([key, value]) => {
-      if (value !== null) {
-        data.append(key, value);
+    const payload = new FormData();
+    Object.entries({ ...formData, nutritional_info: combinedNutritional }).forEach(
+      ([key, value]) => {
+        if (value !== null) payload.append(key, value as any);
       }
-    });
-  
+    );
+
     try {
-      const response = await axios.post(
+      await axios.post(
         "http://localhost:8000/menu/create/",
-        data,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
+        payload,
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
       alert("Menu item added!");
-      console.log("Success:", response.data);
-    } catch (error: unknown) {
-      const err = error as AxiosError;
-  
-      if (err.response) {
-        console.error("Server responded with:", err.response.data);
-        alert(`Failed to add item: ${JSON.stringify(err.response.data)}`);
+    } catch (err: unknown) {
+      const axiosErr = err as AxiosError;
+      if (axiosErr.response) {
+        setError(JSON.stringify(axiosErr.response.data));
       } else {
-        console.error(
-          "Request error:",
-          err instanceof Error ? err.message : err
-        );
-        alert("Failed to add item. See console for details.");
+        setError(axiosErr.message);
       }
     }
   };
-  
-  return (
-    <form onSubmit={handleSubmit} className="add-menu-form">
-      <input
-        name="name"
-        placeholder="Item name"
-        value={formData.name}
-        onChange={handleChange}
-        required
-      />
-      <input
-        name="price"
-        placeholder="Price"
-        type="number"
-        value={formData.price}
-        onChange={handleChange}
-        required
-      />
-      <select
-        name="category"
-        value={formData.category}
-        onChange={handleChange}
-        required
-      >
-        <option value="" disabled>Select category</option>
-        {categoryOptions.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
 
-      {/* New nutritional info fields */}
-      <input
-        name="nutritionalCalories"
-        placeholder="Calories"
-        type="number"
-        value={formData.nutritionalCalories}
-        onChange={handleChange}
-      />
-      <input
-        name="nutritionalProtein"
-        placeholder="Protein (g)"
-        type="number"
-        value={formData.nutritionalProtein}
-        onChange={handleChange}
-      />
-      <input
-        name="nutritionalCarbs"
-        placeholder="Carbs (g)"
-        type="number"
-        value={formData.nutritionalCarbs}
-        onChange={handleChange}
-      />
-      <input
-        name="nutritionalFats"
-        placeholder="Fats (g)"
-        type="number"
-        value={formData.nutritionalFats}
-        onChange={handleChange}
-      />
-      <input
-        name="nutritionalAllergens"
-        placeholder="Allergens"
-        value={formData.nutritionalAllergens}
-        onChange={handleChange}
-      />
-      <select
-        name="dietary_restrictions"
-        value={formData.dietary_restrictions}
-        onChange={handleChange}
-      >
-        {dietaryOptions.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-      <input
-        type="file"
-        name="image"
-        accept="image/*"
-        onChange={handleFileChange}
-      />
-      <button type="submit">Add Item</button>
-    </form>
+  return (
+    <div className={styles.container}>
+      <div className={styles.card}>
+      <h2 className={styles.title}>Add New Menu Item</h2>
+        {error && <div className={styles.error}>{error}</div>}
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.formGroup}>
+            <input
+              className={styles.input}
+              name="name"
+              placeholder="Item Name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className={styles.formGroupRow}>
+            <input
+              className={styles.input}
+              name="price"
+              type="number"
+              placeholder="Price"
+              value={formData.price}
+              onChange={handleChange}
+              required
+            />
+            <select
+              className={styles.select}
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              required
+            >
+              <option value="" disabled>
+                Category
+              </option>
+              {categoryOptions.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.sectionTitle}>Nutritional Info</div>
+          <div className={styles.formGrid}>
+            <input
+              className={styles.inputSmall}
+              name="nutritionalCalories"
+              type="number"
+              placeholder="Calories"
+              value={formData.nutritionalCalories}
+              onChange={handleChange}
+            />
+            <input
+              className={styles.inputSmall}
+              name="nutritionalProtein"
+              type="number"
+              placeholder="Protein (g)"
+              value={formData.nutritionalProtein}
+              onChange={handleChange}
+            />
+            <input
+              className={styles.inputSmall}
+              name="nutritionalCarbs"
+              type="number"
+              placeholder="Carbs (g)"
+              value={formData.nutritionalCarbs}
+              onChange={handleChange}
+            />
+            <input
+              className={styles.inputSmall}
+              name="nutritionalFats"
+              type="number"
+              placeholder="Fats (g)"
+              value={formData.nutritionalFats}
+              onChange={handleChange}
+            />
+            <input
+              className={styles.inputSmall}
+              name="nutritionalAllergens"
+              placeholder="Allergens"
+              value={formData.nutritionalAllergens}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <select
+              className={styles.select}
+              name="dietary_restrictions"
+              value={formData.dietary_restrictions}
+              onChange={handleChange}
+            >
+              {dietaryOptions.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
+            <input
+              className={styles.input}
+              type="file"
+              name="image"
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+          </div>
+
+          <button type="submit" className={styles.button}>
+            Add Item
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
 

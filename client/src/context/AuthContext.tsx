@@ -9,7 +9,9 @@ import axios from "../utils/axios";
 
 type User = {
   username: string;
-  email: string;
+  email:    string;
+  is_staff: boolean;
+  groups:   string[];
 };
 
 interface AuthContextType {

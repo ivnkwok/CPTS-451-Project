@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import MenuItemCard from "../../components/menu/MenuItemCard";
 import styles from "./menu.module.css";
 import axios from "../../utils/axios";
-import { FaFilter, FaXmark } from "react-icons/fa6";
+import { FaFilter, FaXmark, FaPlus } from "react-icons/fa6";
 import BalanceDisplay from "../../components/balance/BalanceDisplay";
 import TopUpForm from "../../components/balance/TopUpForm";
 import { useAuth } from "../../context/AuthContext";
 import { useBalance } from "../../components/balance/BalanceContext";
 import LowBalanceNotification from "../../components/balance/LowBalanceNotification";
+import { Link } from "@tanstack/react-router";
 
 /**
  * Represents the structure of a menu item and enforces type safety.
@@ -46,6 +47,8 @@ const Menu = () => {
   const [maxPrice, setMaxPrice] = useState<string>("");
   const [dietary, setDietary] = useState<string>("");
   const { user, isLoading } = useAuth();
+  const isAdminOrStaff =
+    user != null && (user.is_staff || user.groups.includes("admin"));
   const [balance, setBalance] = useState<number | null>(null);
   const { isLowBalance } = useBalance();
 
@@ -179,19 +182,29 @@ const Menu = () => {
               <h2 className={styles["category-title"]}>
                 {selectedCategory.toUpperCase()}
               </h2>
-              <button onClick={() => setShowFilterPanel(!showFilterPanel)}>
-                {showFilterPanel ? (
-                  <FaXmark
-                    aria-label="Close menu filter option button."
-                    title="Close filter button."
-                  />
-                ) : (
-                  <FaFilter
-                    aria-label="Open menu filter option button."
-                    title="Open filter button."
-                  />
+              <div className={styles.actions}>
+                {isAdminOrStaff && (
+                  <Link
+                    to="/menu/add-menu"
+                    title="Add new menu item"
+                    aria-label="Add menu item"
+                  >
+                    <FaPlus size={20} />
+                  </Link>
                 )}
-              </button>
+
+                <button
+                  onClick={() => setShowFilterPanel(!showFilterPanel)}
+                  title={showFilterPanel ? "Close filter" : "Open filter"}
+                  aria-label={
+                    showFilterPanel
+                      ? "Close filter options"
+                      : "Open filter options"
+                  }
+                >
+                  {showFilterPanel ? <FaXmark size={20} /> : <FaFilter size={20} />}
+                </button>
+              </div>
             </div>
 
             {/* Filter panel */}

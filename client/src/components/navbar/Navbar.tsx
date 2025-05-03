@@ -11,6 +11,8 @@ import { useAuth } from "../../context/AuthContext";
  */
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const isAdminOrStaff =
+    user != null && (user.is_staff || user.groups.includes("admin"));
 
   const handleLogout = async () => {
     await logout();
@@ -35,16 +37,18 @@ const Navbar = () => {
               Menu
             </Link>
           </li>
-          <li>
-            <Link
-              to="/stats"
-              activeProps={{ style: { color: "cyan" } }}
-              aria-label="View statistics link."
-              title="View statistics"
-            >
-              Stats
-            </Link>
-          </li>
+          {isAdminOrStaff && (
+            <li>
+              <Link
+                to="/stats"
+                activeProps={{ style: { color: "cyan" } }}
+                aria-label="View statistics link."
+                title="View statistics"
+              >
+                Stats
+              </Link>
+            </li>
+          )}
           <li>
             <Link
               to="/about"

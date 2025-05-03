@@ -1,0 +1,97 @@
+.container {
+    width: 100%;
+    box-sizing: border-box;
+    padding: var(--size-600);
+}
+
+.card {
+    margin: 0 auto;
+    background-color: var(--clr-primary-100);
+    border-radius: var(--size-200);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: var(--size-600);
+    width: 100%;
+    max-width: 500px;
+}
+
+.title {
+    font-size: var(--fs-300);
+    margin-bottom: var(--size-500);
+    text-align: center;
+}
+
+.error {
+    color: var(--clr-primary-error);
+    margin-bottom: var(--size-400);
+    text-align: center;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.formGroup {
+    margin-bottom: var(--size-400);
+    display: flex;
+    flex-direction: column;
+}
+
+.formGroupRow {
+    display: flex;
+    gap: var(--size-300);
+    margin-bottom: var(--size-400);
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: var(--size-300);
+    margin-bottom: var(--size-400);
+}
+
+.sectionTitle {
+    font-weight: var(--fw-regular);
+    margin-bottom: var(--size-200);
+}
+
+.input,
+.select,
+.inputSmall {
+    width: 100%;
+    padding: var(--size-400);
+    font-size: var(--fs-200);
+    border: 1px solid #ddd;
+    border-radius: var(--size-200);
+    outline: none;
+}
+
+.inputSmall {
+    padding: var(--size-200);
+}
+
+.select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='5' viewBox='0 0 10 5'><path fill='%23666' d='M0 0l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right var(--size-300) center;
+}
+
+.button {
+    width: 100%;
+    padding: var(--size-400);
+    font-size: var(--fs-200);
+    background-color: var(--clr-primary-300);
+    color: var(--clr-primary-100);
+    border: none;
+    border-radius: var(--size-200);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.button:hover {
+    background-color: var(--clr-primary-500);
+    color: var(--clr-primary-100);
+}

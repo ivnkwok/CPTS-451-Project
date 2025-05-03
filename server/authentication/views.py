@@ -25,6 +25,8 @@ def login_view(request):
                 "user": {
                     "username": user.username,
                     "email": user.email,
+                    "is_staff": user.is_staff,
+                    "groups": list(user.groups.values_list('name', flat=True)),
                 }
             })
         return JsonResponse({"error": "Invalid credentials"}, status=401)

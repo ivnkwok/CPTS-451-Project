@@ -1,69 +1,63 @@
-# Sprint x Report 
-Video Link: [`Link to our video demo`](https://youtu.be/0lDBx81ZCC4)
+# Sprint 3 Report  
+Video Link: [Link to our video demo](https://youtu.be/IapbpoGkopo)
 
-## What's New (User Facing)
- * View Nutritional Info: Users can now view the nutrition associated with each menu item.
- * View User Balance: Students can view their remaining balance amount.
- * Increase User Balance: Students can increase their balance amount.
- * Student Budget Filter: Students can now filter through menu items based on price range.
- * Student Dietary Restriction Filter: Students can now filter through menu items based on dietary restrictions.
- * Student Notifications: Students can now see low balance alerts.
+## What’s New (User Facing)
+- **Feedback Management**: Dining hall staff can view student feedback and send replies to confirm receipt.
+- **Menu Item Removal**: Staff can delete obsolete or unpopular menu items.
+- **Feedback Submission**: Students can leave feedback to help the dining hall improve.
+- **Role‑Based Access**: All users now see only the features appropriate to their role.
+- **Meal Change Requests**: Students can request modifications to their orders (e.g., substitutions or dietary adjustments).
+- **Account Deletion**: Administrators can remove student accounts when they leave campus.
+- **Sales Dashboard**: Staff can view aggregate sales statistics to optimize menu offerings.
+- **Balance Lookup**: Dining hall staff can check a student’s current balance before serving.
+- **Detailed Reporting**: Admins can generate reports on meal‑plan usage and item popularity.
+- **Nutrition Editing**: Staff can update the nutritional information for each menu item.
 
 ## Work Summary (Developer Facing)
-During Sprint 2, our team focused on enhancing user experience by implementing several key features including nutritional info display, budget tracking, balance top-ups, low balance notification alerts, and menu filtering based on budget and dietary preferences. We completed five major user stories, integrating these features smoothly with the existing system using tools like React, Django, and PostgreSQL. However, Firebase authentication posed significant implementation challenges, leading to a team decision to switch to Django authentication. Communication remained strong, but time management and sprint workload distribution were areas of concern. To address this, we committed to dedicating more time per member per sprint and introduced bi-weekly check-ins to better align team efforts and meet project goals in the final sprint.
+In Sprint 3, we delivered both student and staff‑facing features across our project. We built:
+
+- **Feedback workflow** (view/reply) end‑to‑end, including frontend forms, and API endpoints.  
+- **Menu CRUD enhancements**, adding deletion capabilities for staff.  
+- **Role‑aware routing** and guards so each user sees only their allowed screens.  
+- **Order customization requests**, with backend support to queue and track change requests.  
+- **Admin utilities** for bulk account deletion and detailed analytics dashboards.  
+- **Balance and statistics views** for staff, integrating existing balance service.  
+- **Nutrition editor**, complete with inline editing on the menu‑management page.
+
+We held daily standups and leveraged bi‑weekly checkpoints to stay aligned. Aside from minor scheduling hiccups around finals week, there were no major technical blockers. Our switch to Django authentication proved to be the right choice.
 
 ## Unfinished Work
-Due to issues with integrating firebase into the application, progress on the following features was stalled:
- * [`As a dining hall staff member, I want to see the balance of a student I’m serving... (#17)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103322226&issue=ivnkwok%7CCPTS-451-Project%7C17)
- * [`As a dining hall staff member, I want to refuse the service... (#18)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103322283&issue=ivnkwok%7CCPTS-451-Project%7C18)
- * [`As a user, I want to have access to functions specified for my role... (#19)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103322360&issue=ivnkwok%7CCPTS-451-Project%7C19)
- * [`As an admin, I want to be able to view detailed reports... (#21)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103322923&issue=ivnkwok%7CCPTS-451-Project%7C21)
-
-Additionally, the following user stories were not picked up this sprint:
- * [`As a student, I want my nutritional values to change as my item is customized... (#14)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103319119&issue=ivnkwok%7CCPTS-451-Project%7C14)
- * [`As an admin, I want to be able to delete user accounts... (#20)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103322590&issue=ivnkwok%7CCPTS-451-Project%7C20)
+The following user stories were picked up but not completed this sprint:
+- [#39](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=108096070&issue=ivnkwok%7CCPTS-451-Project%7C39) As a staff member, I want to update inventory levels so that I can track ingredient availability.  
+- [#40](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=108096082&issue=ivnkwok%7CCPTS-451-Project%7C40) As an admin, I want to view inventory levels so that I know when to restock ingredients.  
+- [#14](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103319119&issue=ivnkwok%7CCPTS-451-Project%7C14) As a student, I want my nutritional values to change as my item is customized so that my nutritional information is accurate.
 
 ## Completed Issues/User Stories
-Here are links to the issues that we completed in this sprint:
-
- * [`As a student, I want to be able to view the nutritional information of an item on the menu... (#5)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=102406574&issue=ivnkwok%7CCPTS-451-Project%7C5)
- * [`As a student, I want to see my balance so I do not exceed my budget. (#15)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103319855&issue=ivnkwok%7CCPTS-451-Project%7C15)
- * [`As a student, I want to top up my balance so that I can continue to use the service worry-free. (#16)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103320359&issue=ivnkwok%7CCPTS-451-Project%7C16)
- * [`As a student, I want to be able to click a button that allows me to filter menu items based on budget. (#23)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103323114&issue=ivnkwok%7CCPTS-451-Project%7C23)
- * [`As a student, I want to be able to click a button that allows me to filter menu items based on dietary restrictions... (#24)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103323884&issue=ivnkwok%7CCPTS-451-Project%7C24)
- * [`As a student, I want to be able to opt into notifications... (#22)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103323029&issue=ivnkwok%7CCPTS-451-Project%7C22)
- 
- ## Incomplete Issues/User Stories
- The following issues were picked up and worked on however, firebase integration proved to be too difficult with the alloted time, causing the following features development to be stalled: 
- * [`As a dining hall staff member, I want to see the balance of a student I’m serving... (#17)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103322226&issue=ivnkwok%7CCPTS-451-Project%7C17)
- * [`As a dining hall staff member, I want to refuse the service... (#18)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103322283&issue=ivnkwok%7CCPTS-451-Project%7C18)
- * [`As a user, I want to have access to functions specified for my role... (#19)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103322360&issue=ivnkwok%7CCPTS-451-Project%7C19)
- * [`As an admin, I want to be able to view detailed reports... (#21)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103322923&issue=ivnkwok%7CCPTS-451-Project%7C21)
-
-Additionally, the following user stories were not picked up this sprint:
- * [`As a student, I want my nutritional values to change as my item is customized... (#14)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103319119&issue=ivnkwok%7CCPTS-451-Project%7C14)
- * [`As an admin, I want to be able to delete user accounts... (#20)`](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103322590&issue=ivnkwok%7CCPTS-451-Project%7C20)
+- [#36](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=108096042&issue=ivnkwok%7CCPTS-451-Project%7C36) Staff: view and reply to user feedback.  
+- [#2](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=102405083&issue=ivnkwok%7CCPTS-451-Project%7C2) Staff: delete menu items.  
+- [#35](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=108096029&issue=ivnkwok%7CCPTS-451-Project%7C35) Student: submit feedback.  
+- [#19](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103322360&issue=ivnkwok%7CCPTS-451-Project%7C19) Role‑based feature access.  
+- [#38](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=108096063&issue=ivnkwok%7CCPTS-451-Project%7C38) Student: request meal changes.  
+- [#20](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103322590&issue=ivnkwok%7CCPTS-451-Project%7C20) Admin: delete user accounts.  
+- [#37](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=108096053&issue=ivnkwok%7CCPTS-451-Project%7C37) Staff: view sales statistics.  
+- [#17](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103322226&issue=ivnkwok%7CCPTS-451-Project%7C17) Staff: check student balance.  
+- [#21](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=103322923&issue=ivnkwok%7CCPTS-451-Project%7C21) Admin: generate detailed reports.  
+- [#4](https://github.com/users/ivnkwok/projects/1/views/1?pane=issue&itemId=102406548&issue=ivnkwok%7CCPTS-451-Project%7C4) Staff: edit nutritional info on menu items.
 
 ## Code Files for Review
 Please review the following code files, which were actively developed during this sprint, for quality:
- * [Menu.tsx](https://github.com/ivnkwok/CPTS-451-Project/blob/main/client/src/pages/menu/Menu.tsx)
- * [AddMenuItem.tsx](https://github.com/ivnkwok/CPTS-451-Project/blob/main/client/src/components/menu/AddMenuItem.tsx)
- * [MenuItemCard.tsx](https://github.com/ivnkwok/CPTS-451-Project/blob/main/client/src/components/menu/MenuItemCard.tsx)
- * [BalanceDisplay.tsx](https://github.com/ivnkwok/CPTS-451-Project/blob/main/client/src/components/balance/BalanceDisplay.tsx)
- * [TopUpForm.tsx](https://github.com/ivnkwok/CPTS-451-Project/blob/main/client/src/components/balance/TopUpForm.tsx)
- * [BalanceContext.tsx](https://github.com/ivnkwok/CPTS-451-Project/blob/cc2b6ab17811792a0f577f395c6a1a00a3682484/client/src/components/balance/BalanceContext.tsx)
+- [Menu.tsx](https://github.com/ivnkwok/CPTS-451-Project/blob/main/client/src/pages/menu/Menu.tsx)
+- [Feedback.tsx](https://github.com/ivnkwok/CPTS-451-Project/blob/main/client/src/pages/feedback/Feedback.tsx)
+- [AuthContext.tsx](https://github.com/ivnkwok/CPTS-451-Project/blob/main/client/src/context/AuthContext.tsx)
+- [DeleteMenuItem.tsx](https://github.com/ivnkwok/CPTS-451-Project/blob/main/client/src/components/menu/DeleteMenuItem.tsx)
+- [stats/index.tsx](https://github.com/ivnkwok/CPTS-451-Project/blob/main/client/src/routes/stats/index.tsx)
 
 ## Retrospective Summary
-Here's what went well:
- * Communication - The team did a good job communicating with each other and keeping everyone informed about potential problems and issues encountered during the coding process.
- * Feature Implementation - The features that were completed worked seamlessly with each other and met all requirements for their use-case scenarios.
+**What Went Well**  
+- Smooth integration of new UI components with existing pages.  
+- Clear API contracts between frontend and backend teams.  
+- Successful deployment of analytics dashboard.
 
-Here's what we'd like to improve:
- * Time Management - Unfortunately due to the timing of this sprint and the time constraints of work with other classes. The group had more difficulty than anticipated completing features.
- * Feature Implementation - The quantity of features implemented per sprint could use improvement.
- * Authentication - One of the major issues facing the team is integration of backend authentication with their assigned features. Firebase has proven to be more difficult to work with than anticipated.
-
-Here are changes we plan to implement in the next sprint:
- * The team recognized the need to dedicate more time per member to each sprint to improve feature completion, addressing issues in time management, feature quantity, and backend authentication integration.
- * A switch from Firebase to Django for authentication was agreed upon, as Django was found to be easier to implement given the project's time constraints.
- * A bi-weekly team recap was established to track progress, identify roadblocks, and ensure individual contributions align toward a cohesive final product.
+**What to Improve**  
+- Communication.  
+- Sprint planning could better account for academic schedules.

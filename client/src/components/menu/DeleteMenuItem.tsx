@@ -1,4 +1,3 @@
-// src/components/DeleteMenuItems.tsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getCSRFToken } from "../../utils/csrf";

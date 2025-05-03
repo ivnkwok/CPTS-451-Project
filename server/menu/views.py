@@ -14,7 +14,7 @@ from rest_framework.response import Response
 
 from .models import MenuItem
 from .serializers import MenuItemSerializer
-from users.models import Balance  # from users app
+from users.models import Balance
 
 
 def is_staff_or_admin(user):
@@ -26,6 +26,10 @@ class MenuItemCreateView(generics.CreateAPIView):
     serializer_class = MenuItemSerializer
     permission_classes = [permissions.AllowAny]
 
+class MenuItemDestroyView(generics.RetrieveDestroyAPIView):
+    queryset = MenuItem.objects.all()
+    serializer_class = MenuItemSerializer
+    permission_classes = [permissions.IsAdminUser]
 
 class MenuItemListView(generics.ListAPIView):
     queryset = MenuItem.objects.all()

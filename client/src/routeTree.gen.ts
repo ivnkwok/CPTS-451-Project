@@ -21,6 +21,7 @@ import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
 import { Route as StatsIndexImport } from './routes/stats/index'
 import { Route as MenuUpdateMenuImport } from './routes/menu/update-menu'
+import { Route as MenuDeleteMenuImport } from './routes/menu/delete-menu'
 import { Route as MenuAddMenuImport } from './routes/menu/add-menu'
 
 // Create/Update Routes
@@ -81,6 +82,12 @@ const StatsIndexRoute = StatsIndexImport.update({
 const MenuUpdateMenuRoute = MenuUpdateMenuImport.update({
   id: '/menu/update-menu',
   path: '/menu/update-menu',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const MenuDeleteMenuRoute = MenuDeleteMenuImport.update({
+  id: '/menu/delete-menu',
+  path: '/menu/delete-menu',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -157,6 +164,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MenuAddMenuImport
       parentRoute: typeof rootRoute
     }
+    '/menu/delete-menu': {
+      id: '/menu/delete-menu'
+      path: '/menu/delete-menu'
+      fullPath: '/menu/delete-menu'
+      preLoaderRoute: typeof MenuDeleteMenuImport
+      parentRoute: typeof rootRoute
+    }
     '/menu/update-menu': {
       id: '/menu/update-menu'
       path: '/menu/update-menu'
@@ -186,6 +200,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/usermanagement': typeof UsermanagementRoute
   '/menu/add-menu': typeof MenuAddMenuRoute
+  '/menu/delete-menu': typeof MenuDeleteMenuRoute
   '/menu/update-menu': typeof MenuUpdateMenuRoute
   '/stats': typeof StatsIndexRoute
 }
@@ -200,6 +215,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/usermanagement': typeof UsermanagementRoute
   '/menu/add-menu': typeof MenuAddMenuRoute
+  '/menu/delete-menu': typeof MenuDeleteMenuRoute
   '/menu/update-menu': typeof MenuUpdateMenuRoute
   '/stats': typeof StatsIndexRoute
 }
@@ -215,6 +231,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/usermanagement': typeof UsermanagementRoute
   '/menu/add-menu': typeof MenuAddMenuRoute
+  '/menu/delete-menu': typeof MenuDeleteMenuRoute
   '/menu/update-menu': typeof MenuUpdateMenuRoute
   '/stats/': typeof StatsIndexRoute
 }
@@ -231,6 +248,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/usermanagement'
     | '/menu/add-menu'
+    | '/menu/delete-menu'
     | '/menu/update-menu'
     | '/stats'
   fileRoutesByTo: FileRoutesByTo
@@ -244,6 +262,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/usermanagement'
     | '/menu/add-menu'
+    | '/menu/delete-menu'
     | '/menu/update-menu'
     | '/stats'
   id:
@@ -257,6 +276,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/usermanagement'
     | '/menu/add-menu'
+    | '/menu/delete-menu'
     | '/menu/update-menu'
     | '/stats/'
   fileRoutesById: FileRoutesById
@@ -272,6 +292,7 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   UsermanagementRoute: typeof UsermanagementRoute
   MenuAddMenuRoute: typeof MenuAddMenuRoute
+  MenuDeleteMenuRoute: typeof MenuDeleteMenuRoute
   MenuUpdateMenuRoute: typeof MenuUpdateMenuRoute
   StatsIndexRoute: typeof StatsIndexRoute
 }
@@ -286,6 +307,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   UsermanagementRoute: UsermanagementRoute,
   MenuAddMenuRoute: MenuAddMenuRoute,
+  MenuDeleteMenuRoute: MenuDeleteMenuRoute,
   MenuUpdateMenuRoute: MenuUpdateMenuRoute,
   StatsIndexRoute: StatsIndexRoute,
 }
@@ -309,6 +331,7 @@ export const routeTree = rootRoute
         "/signup",
         "/usermanagement",
         "/menu/add-menu",
+        "/menu/delete-menu",
         "/menu/update-menu",
         "/stats/"
       ]
@@ -339,6 +362,9 @@ export const routeTree = rootRoute
     },
     "/menu/add-menu": {
       "filePath": "menu/add-menu.tsx"
+    },
+    "/menu/delete-menu": {
+      "filePath": "menu/delete-menu.tsx"
     },
     "/menu/update-menu": {
       "filePath": "menu/update-menu.tsx"

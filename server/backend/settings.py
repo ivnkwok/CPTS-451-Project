@@ -71,7 +71,6 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:5174',
 ]
 
-
 SESSION_COOKIE_SAMESITE = "Lax"  
 SESSION_COOKIE_SECURE = False
 
